@@ -1,0 +1,286 @@
+// ============================================================
+// EDITORIAL HORIZONTE — Esquema de Base de Datos Relacional
+// Modelo Multi-Almacén · Consignaciones · Comisiones · ERP
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ────────────────────────────────────────────────────────────
+// 1. CATÁLOGO: Autores, Categorías, Editoriales y Libros
+// ────────────────────────────────────────────────────────────
+
+model Author {
+  id          String   @id @default(cuid())
+  name        String
+  bio         String?
+  nationality String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  books BookAuthor[]
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  books BookCategory[]
+}
+
+/// Editoriales de terceros (no la propia Editorial Horizonte)
+model Publisher {
+  id            String   @id @default(cuid())
+  name          String
+  country       String?
+  contactEmail  String?
+  contactPhone  String?
+  commissionRate Float    @default(0.15) /// Tasa de comisión por defecto (15%)
+  notes         String?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  books Book[]
+}
+
+model Book {
+  id            String    @id @default(cuid())
+  title         String
+  slug          String    @unique
+  isbn          String?   @unique
+  synopsis      String?
+  pages         Int?
+  language      String    @default("Español")
+  publicationYear Int?
+  coverUrl      String?   /// URL de portada (Supabase Storage / local)
+  price         Float     /// Precio de venta al público
+  costPrice     Float?    /// Precio de costo (para márgenes)
+  weightKg      Float?    /// Peso en kg para cálculo de envío
+  isActive      Boolean   @default(true)
+  isFeatured    Boolean   @default(false)
+
+  /// Separación de Catálogo: PROPIO vs. TERCEROS
+  /// "PROPIO"  = Fondo editorial de Editorial Horizonte (alto margen)
+  /// "TERCERO" = Terceras editoriales / autores independientes
+  originType    String    @default("PROPIO")
+
+  /// FK: Editorial de terceros (nulo si es fondo propio)
+  publisherId   String?
+  publisher     Publisher? @relation(fields: [publisherId], references: [id], onDelete: SetNull)
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  /// Relaciones
+  authors     BookAuthor[]
+  categories  BookCategory[]
+  inventory   Inventory[]
+  orderItems  OrderItem[]
+  auditLog    InventoryAuditLog[]
+}
+
+model BookAuthor {
+  bookId   String
+  authorId String
+  order    Int     @default(0) /// Orden de aparición en portada
+
+  book     Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  author   Author @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@id([bookId, authorId])
+}
+
+model BookCategory {
+  bookId     String
+  categoryId String
+
+  book     Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([bookId, categoryId])
+}
+
+// ────────────────────────────────────────────────────────────
+// 2. INVENTARIO MULTI-ALMACÉN (Consignaciones)
+//    Cada librería aliada es un "Almacén Independiente"
+// ────────────────────────────────────────────────────────────
+
+model Warehouse {
+  id          String   @id @default(cuid())
+  name        String   /// Ej: "Librería SUR", "El Virrey", "Almacén Central"
+  slug        String   @unique
+  address     String?
+  city        String?
+  phone       String?
+  contactName String?
+  warehouseType String @default("PHYSICAL") /// "PHYSICAL" | "VIRTUAL" (tienda online)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  inventory   Inventory[]
+  orders      Order[]
+  auditLog    InventoryAuditLog[]
+}
+
+/// Stock por libro por almacén — núcleo del sistema multi-almacén
+model Inventory {
+  id              String   @id @default(cuid())
+  bookId          String
+  warehouseId     String
+
+  /// Stock disponible en este almacén (unidades listas para venta)
+  stockDisponible  Int     @default(0)
+
+  /// Stock en consignación (asignado a este punto de venta, aún no vendido)
+  stockConsignado  Int     @default(0)
+
+  /// Stock mínimo para alertas de reabastecimiento
+  stockMinimo      Int     @default(5)
+
+  /// Nivel de reposición sugerido
+  stockReposicion  Int     @default(20)
+
+  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now())
+
+  book            Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  warehouse       Warehouse @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+
+  @@unique([bookId, warehouseId]) /// Un registro único por (libro, almacén)
+}
+
+// ────────────────────────────────────────────────────────────
+// 3. ÓRDENES DE VENTA Y CHECKOUT
+// ────────────────────────────────────────────────────────────
+
+model Order {
+  id              String    @id @default(cuid())
+  orderNumber     String    @unique /// Ej: "EH-2026-001"
+
+  customerName    String
+  customerEmail   String?
+  customerPhone   String?
+  customerAddress String?   /// Para envíos físicos
+  customerCity    String?
+
+  /// Estado: PENDING → CONFIRMED → SHIPPED → DELIVERED | CANCELLED
+  status          String    @default("PENDING")
+
+  /// Origen: "ONLINE" (tienda web) | "MANUAL" (registro manual en admin)
+  source          String    @default("ONLINE")
+
+  /// Almacén desde donde se despacha (para descuento de stock)
+  warehouseId     String?
+  warehouse       Warehouse? @relation(fields: [warehouseId], references: [id], onDelete: SetNull)
+
+  subtotal        Float     /// Suma de items sin descuento
+  discountAmount  Float     @default(0)
+  shippingCost    Float     @default(0)
+  totalAmount     Float     /// Monto final a pagar
+
+  paymentMethod   String?   /// "MERCADO_PAGO" | "TRANSFERENCIA" | "EFECTIVO"
+  paymentRef      String?   /// Referencia de pago externo
+
+  notes           String?
+
+  confirmedAt     DateTime? /// Cuándo se confirmó (descuenta stock)
+  shippedAt       DateTime?
+  deliveredAt     DateTime?
+  cancelledAt     DateTime?
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  items           OrderItem[]
+  auditLog        InventoryAuditLog[]
+}
+
+model OrderItem {
+  id              String   @id @default(cuid())
+  orderId         String
+  bookId          String
+
+  title           String   /// Denormalizado para historial
+  unitPrice       Float    /// Precio al momento de la venta
+  quantity        Int
+  subtotal        Float    /// unitPrice * quantity
+
+  /// Comisión calculada para libros de terceros
+  commissionRate  Float?   /// Tasa aplicada (nulo si es fondo propio)
+  commissionAmount Float?  /// Monto de comisión
+
+  order           Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  book            Book     @relation(fields: [bookId], references: [id])
+
+  @@index([orderId])
+  @@index([bookId])
+}
+
+// ────────────────────────────────────────────────────────────
+// 4. AUDITORÍA DE INVENTARIO (Trazabilidad completa)
+//    Registra cada movimiento de stock para evitar
+//    sobreventas y permitir conciliación.
+// ────────────────────────────────────────────────────────────
+
+model InventoryAuditLog {
+  id              String   @id @default(cuid())
+  bookId          String
+  warehouseId     String
+  orderId         String?  /// Nulo si no es por venta
+
+  /// Tipo de movimiento:
+  /// "SALE"      = Descuento por venta
+  /// "CONSIGN"   = Asignación a consignación
+  /// "RETURN"    = Devolución
+  /// "ADJUSTMENT"= Ajuste manual
+  /// "RECEIPT"   = Ingreso de stock nuevo
+  movementType    String
+
+  quantityBefore  Int      /// Stock antes del movimiento
+  quantityAfter   Int      /// Stock después del movimiento
+  quantityDelta   Int      /// Diferencia (negativo = salida)
+
+  performedById   String?
+  performedBy     AdminUser? @relation("AuditPerformer", fields: [performedById], references: [id], onDelete: SetNull)
+  notes           String?
+
+  createdAt       DateTime @default(now())
+
+  book            Book      @relation(fields: [bookId], references: [id])
+  warehouse       Warehouse @relation(fields: [warehouseId], references: [id])
+  order           Order?    @relation(fields: [orderId], references: [id])
+
+  @@index([bookId, warehouseId])
+  @@index([movementType])
+  @@index([createdAt])
+}
+
+// ────────────────────────────────────────────────────────────
+// 5. USUARIOS ADMINISTRADORES
+// ────────────────────────────────────────────────────────────
+
+model AdminUser {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  passwordHash  String    /// En producción: bcrypt/argon2
+  role          String    @default("STAFF") /// "SUPER_ADMIN" | "ADMIN" | "STAFF"
+  isActive      Boolean   @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  auditLog      InventoryAuditLog[] @relation("AuditPerformer")
+}
