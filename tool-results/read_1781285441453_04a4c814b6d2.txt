@@ -1,0 +1,1069 @@
+     1→'use client';
+     2→
+     3→import { useState } from 'react';
+     4→import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+     5→import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+     6→import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+     7→import { Badge } from '@/components/ui/badge';
+     8→import { Button } from '@/components/ui/button';
+     9→import { Input } from '@/components/ui/input';
+    10→import { Label } from '@/components/ui/label';
+    11→import { Switch } from '@/components/ui/switch';
+    12→import { Skeleton } from '@/components/ui/skeleton';
+    13→import { Separator } from '@/components/ui/separator';
+    14→import { ScrollArea } from '@/components/ui/scroll-area';
+    15→import { SectionWrapper } from '@/components/section-wrapper';
+    16→import {
+    17→  Select,
+    18→  SelectContent,
+    19→  SelectItem,
+    20→  SelectTrigger,
+    21→  SelectValue,
+    22→} from '@/components/ui/select';
+    23→import {
+    24→  Dialog,
+    25→  DialogContent,
+    26→  DialogHeader,
+    27→  DialogTitle,
+    28→  DialogFooter,
+    29→} from '@/components/ui/dialog';
+    30→import {
+    31→  Table,
+    32→  TableBody,
+    33→  TableCell,
+    34→  TableHead,
+    35→  TableHeader,
+    36→  TableRow,
+    37→} from '@/components/ui/table';
+    38→import {
+    39→  BarChart,
+    40→  Bar,
+    41→  XAxis,
+    42→  YAxis,
+    43→  CartesianGrid,
+    44→  PieChart,
+    45→  Pie,
+    46→  Cell,
+    47→} from 'recharts';
+    48→import {
+    49→  ChartContainer,
+    50→  ChartTooltip,
+    51→  ChartTooltipContent,
+    52→  ChartLegend,
+    53→  ChartLegendContent,
+    54→} from '@/components/ui/chart';
+    55→import {
+    56→  DollarSign,
+    57→  Package,
+    58→  Clock,
+    59→  BookOpen,
+    60→  Minus,
+    61→  Plus,
+    62→  Edit,
+    63→  PlusCircle,
+    64→  Eye,
+    65→} from 'lucide-react';
+    66→import {
+    67→  getDashboardStats,
+    68→  getOrders,
+    69→  getInventoryByWarehouse,
+    70→  getAllBooks,
+    71→  updateBook,
+    72→  updateInventory,
+    73→  getAllAuthors,
+    74→  getAllPublishers,
+    75→  createBook,
+    76→  getWarehouses,
+    77→} from '@/lib/actions';
+    78→import { useAppStore } from '@/lib/store';
+    79→import { toast } from 'sonner';
+    80→import { useForm } from 'react-hook-form';
+    81→import { z } from 'zod/v4';
+    82→import { zodResolver } from '@hookform/resolvers/zod';
+    83→import type {
+    84→  DashboardStats,
+    85→  OrderData,
+    86→  InventoryRecord,
+    87→  Warehouse,
+    88→} from '@/lib/types';
+    89→
+    90→// ─── Admin Login ───
+    91→
+    92→function AdminLogin({ onAuth }: { onAuth: () => void }) {
+    93→  const [password, setPassword] = useState('');
+    94→  const [loading, setLoading] = useState(false);
+    95→  const [error, setError] = useState('');
+    96→
+    97→  const handleSubmit = async (e: React.FormEvent) => {
+    98→    e.preventDefault();
+    99→    setLoading(true);
+   100→    setError('');
+   101→    try {
+   102→      const result = await import('@/lib/actions').then((m) =>
+   103→        m.loginAdmin(password)
+   104→      );
+   105→      if (result) {
+   106→        onAuth();
+   107→      } else {
+   108→        setError('Contraseña incorrecta');
+   109→      }
+   110→    } catch {
+   111→      setError('Error de conexión');
+   112→    } finally {
+   113→      setLoading(false);
+   114→    }
+   115→  };
+   116→
+   117→  return (
+   118→    <div className="mx-auto max-w-sm space-y-6 pt-12">
+   119→      <div className="text-center">
+   120→        <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-primary/10">
+   121→          <Edit className="size-6 text-primary" />
+   122→        </div>
+   123→        <h3 className="font-serif text-xl font-bold">Panel de Administración</h3>
+   124→        <p className="mt-1 text-sm text-muted-foreground">
+   125→          Ingresá la contraseña para acceder
+   126→        </p>
+   127→      </div>
+   128→
+   129→      <form onSubmit={handleSubmit} className="space-y-3">
+   130→        <div className="space-y-2">
+   131→          <Label htmlFor="admin-pass">Contraseña</Label>
+   132→          <Input
+   133→            id="admin-pass"
+   134→            type="password"
+   135→            value={password}
+   136→            onChange={(e) => setPassword(e.target.value)}
+   137→            placeholder="••••••••"
+   138→          />
+   139→        </div>
+   140→        {error && <p className="text-xs text-destructive">{error}</p>}
+   141→        <Button type="submit" className="w-full" disabled={loading}>
+   142→          Ingresar
+   143→        </Button>
+   144→      </form>
+   145→    </div>
+   146→  );
+   147→}
+   148→
+   149→// ─── Dashboard Tab ───
+   150→
+   151→function DashboardTab() {
+   152→  const { data: stats, isLoading } = useQuery<DashboardStats>({
+   153→    queryKey: ['dashboard'],
+   154→    queryFn: () => getDashboardStats(),
+   155→  });
+   156→
+   157→  if (isLoading) {
+   158→    return (
+   159→      <div className="space-y-4">
+   160→        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+   161→          {Array.from({ length: 4 }).map((_, i) => (
+   162→            <Skeleton key={i} className="h-24" />
+   163→          ))}
+   164→        </div>
+   165→        <Skeleton className="h-72" />
+   166→        <Skeleton className="h-72" />
+   167→      </div>
+   168→    );
+   169→  }
+   170→
+   171→  if (!stats) return null;
+   172→
+   173→  const kpis = [
+   174→    {
+   175→      label: 'Ventas totales',
+   176→      value: `$${stats.totalSales.toLocaleString('es-AR')}`,
+   177→      icon: <DollarSign className="size-4" />,
+   178→    },
+   179→    {
+   180→      label: 'Stock total',
+   181→      value: stats.totalStock.toLocaleString(),
+   182→      icon: <Package className="size-4" />,
+   183→    },
+   184→    {
+   185→      label: 'Órdenes pendientes',
+   186→      value: String(stats.pendingOrders),
+   187→      icon: <Clock className="size-4" />,
+   188→    },
+   189→    {
+   190→      label: 'Libros activos',
+   191→      value: String(stats.totalBooks),
+   192→      icon: <BookOpen className="size-4" />,
+   193→    },
+   194→  ];
+   195→
+   196→  const barConfig = {
+   197→    sales: { label: 'Ventas', color: 'var(--color-primary)' },
+   198→  };
+   199→
+   200→  const pieConfig = {
+   201→    'Fondo Propio': { label: 'Fondo Propio', color: 'var(--color-primary)' },
+   202→    Terceros: { label: 'Terceros', color: 'hsl(38, 92%, 50%)' },
+   203→  };
+   204→
+   205→  return (
+   206→    <div className="space-y-6">
+   207→      {/* KPIs */}
+   208→      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+   209→        {kpis.map((kpi) => (
+   210→          <Card key={kpi.label}>
+   211→            <CardContent className="flex items-center gap-3 p-4">
+   212→              <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+   213→                {kpi.icon}
+   214→              </div>
+   215→              <div>
+   216→                <p className="text-xs text-muted-foreground">{kpi.label}</p>
+   217→                <p className="text-lg font-bold">{kpi.value}</p>
+   218→              </div>
+   219→            </CardContent>
+   220→          </Card>
+   221→        ))}
+   222→      </div>
+   223→
+   224→      {/* Charts */}
+   225→      <div className="grid gap-6 lg:grid-cols-2">
+   226→        <Card>
+   227→          <CardHeader>
+   228→            <CardTitle className="text-sm font-medium">
+   229→              Ventas por punto de venta
+   230→            </CardTitle>
+   231→          </CardHeader>
+   232→          <CardContent>
+   233→            <ChartContainer config={barConfig} className="h-64 w-full">
+   234→              <BarChart data={stats.salesByWarehouse} layout="vertical">
+   235→                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+   236→                <XAxis type="number" tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`} />
+   237→                <YAxis dataKey="name" type="category" width={100} tick={{ fontSize: 12 }} />
+   238→                <ChartTooltip content={<ChartTooltipContent />} />
+   239→                <Bar dataKey="sales" fill="var(--color-primary)" radius={[0, 4, 4, 0]} />
+   240→              </BarChart>
+   241→            </ChartContainer>
+   242→          </CardContent>
+   243→        </Card>
+   244→
+   245→        <Card>
+   246→          <CardHeader>
+   247→            <CardTitle className="text-sm font-medium">
+   248→              Origen de libros
+   249→            </CardTitle>
+   250→          </CardHeader>
+   251→          <CardContent>
+   252→            <ChartContainer config={pieConfig} className="h-64 w-full">
+   253→              <PieChart>
+   254→                <Pie
+   255→                  data={stats.booksByOrigin}
+   256→                  dataKey="value"
+   257→                  nameKey="name"
+   258→                  cx="50%"
+   259→                  cy="50%"
+   260→                  outerRadius={80}
+   261→                  innerRadius={40}
+   262→                >
+   263→                  {stats.booksByOrigin.map((entry, index) => (
+   264→                    <Cell key={index} fill={entry.fill} />
+   265→                  ))}
+   266→                </Pie>
+   267→                <ChartTooltip content={<ChartTooltipContent />} />
+   268→                <ChartLegend content={<ChartLegendContent nameKey="name" />} />
+   269→              </PieChart>
+   270→            </ChartContainer>
+   271→          </CardContent>
+   272→        </Card>
+   273→      </div>
+   274→    </div>
+   275→  );
+   276→}
+   277→
+   278→// ─── Inventario Tab ───
+   279→
+   280→function InventarioTab() {
+   281→  const [warehouseFilter, setWarehouseFilter] = useState<string>('all');
+   282→
+   283→  const { data: warehouses = [] } = useQuery<Warehouse[]>({
+   284→    queryKey: ['warehouses-inv'],
+   285→    queryFn: () => getWarehouses() as Promise<Warehouse[]>,
+   286→  });
+   287→
+   288→  const { data: inventory = [], isLoading } = useQuery<InventoryRecord[]>({
+   289→    queryKey: ['inventory', warehouseFilter],
+   290→    queryFn: () =>
+   291→      getInventoryByWarehouse(
+   292→        warehouseFilter === 'all' ? undefined : warehouseFilter
+   293→      ) as Promise<InventoryRecord[]>,
+   294→  });
+   295→
+   296→  const queryClient = useQueryClient();
+   297→
+   298→  const adjustMutation = useMutation({
+   299→    mutationFn: ({
+   300→      bookId,
+   301→      warehouseId,
+   302→      delta,
+   303→      type,
+   304→    }: {
+   305→      bookId: string;
+   306→      warehouseId: string;
+   307→      delta: number;
+   308→      type: string;
+   309→    }) => updateInventory(bookId, warehouseId, delta, type),
+   310→    onSuccess: () => {
+   311→      queryClient.invalidateQueries({ queryKey: ['inventory'] });
+   312→      toast.success('Stock actualizado');
+   313→    },
+   314→    onError: (err: Error) => toast.error(err.message),
+   315→  });
+   316→
+   317→  function stockLevel(stock: number, min: number) {
+   318→    if (stock <= 0) return { color: 'text-red-500', bg: 'bg-red-50', label: 'Sin stock' };
+   319→    if (stock < min) return { color: 'text-amber-600', bg: 'bg-amber-50', label: 'Bajo' };
+   320→    return { color: 'text-emerald-600', bg: 'bg-emerald-50', label: 'OK' };
+   321→  }
+   322→
+   323→  return (
+   324→    <div className="space-y-4">
+   325→      <div className="flex items-center justify-between">
+   326→        <h3 className="font-medium">Inventario por almacén</h3>
+   327→        <Select
+   328→          value={warehouseFilter}
+   329→          onValueChange={setWarehouseFilter}
+   330→        >
+   331→          <SelectTrigger className="w-48">
+   332→            <SelectValue />
+   333→          </SelectTrigger>
+   334→          <SelectContent>
+   335→            <SelectItem value="all">Todos los almacenes</SelectItem>
+   336→            {warehouses.map((wh) => (
+   337→              <SelectItem key={wh.id} value={wh.id}>
+   338→                {wh.name}
+   339→              </SelectItem>
+   340→            ))}
+   341→          </SelectContent>
+   342→        </Select>
+   343→      </div>
+   344→
+   345→      {isLoading ? (
+   346→        <Skeleton className="h-96" />
+   347→      ) : (
+   348→        <div className="rounded-lg border overflow-hidden">
+   349→          <ScrollArea className="max-h-96">
+   350→            <Table>
+   351→              <TableHeader>
+   352→                <TableRow>
+   353→                  <TableHead>Libro</TableHead>
+   354→                  <TableHead>Almacén</TableHead>
+   355→                  <TableHead className="text-center">Stock</TableHead>
+   356→                  <TableHead className="text-center">Consignado</TableHead>
+   357→                  <TableHead className="text-center">Estado</TableHead>
+   358→                  <TableHead className="text-right">Ajuste</TableHead>
+   359→                </TableRow>
+   360→              </TableHeader>
+   361→              <TableBody>
+   362→                {inventory.map((inv) => {
+   363→                  const level = stockLevel(inv.stockDisponible, inv.stockMinimo);
+   364→                  return (
+   365→                    <TableRow key={inv.id}>
+   366→                      <TableCell className="max-w-[200px] truncate font-medium text-xs">
+   367→                        {inv.book.title}
+   368→                      </TableCell>
+   369→                      <TableCell className="text-xs">
+   370→                        {inv.warehouse.name}
+   371→                      </TableCell>
+   372→                      <TableCell className="text-center font-mono text-sm">
+   373→                        {inv.stockDisponible}
+   374→                      </TableCell>
+   375→                      <TableCell className="text-center font-mono text-sm text-muted-foreground">
+   376→                        {inv.stockConsignado}
+   377→                      </TableCell>
+   378→                      <TableCell className="text-center">
+   379→                        <Badge
+   380→                          variant="outline"
+   381→                          className={`${level.color} ${level.bg} text-[10px]`}
+   382→                        >
+   383→                          {level.label}
+   384→                        </Badge>
+   385→                      </TableCell>
+   386→                      <TableCell className="text-right">
+   387→                        <div className="flex justify-end gap-1">
+   388→                          <Button
+   389→                            size="icon"
+   390→                            variant="ghost"
+   391→                            className="size-7"
+   392→                            onClick={() =>
+   393→                              adjustMutation.mutate({
+   394→                                bookId: inv.bookId,
+   395→                                warehouseId: inv.warehouseId,
+   396→                                delta: -1,
+   397→                                type: 'ADJUSTMENT',
+   398→                              })
+   399→                            }
+   400→                          >
+   401→                            <Minus className="size-3" />
+   402→                          </Button>
+   403→                          <Button
+   404→                            size="icon"
+   405→                            variant="ghost"
+   406→                            className="size-7"
+   407→                            onClick={() =>
+   408→                              adjustMutation.mutate({
+   409→                                bookId: inv.bookId,
+   410→                                warehouseId: inv.warehouseId,
+   411→                                delta: 1,
+   412→                                type: 'RECEIPT',
+   413→                              })
+   414→                            }
+   415→                          >
+   416→                            <Plus className="size-3" />
+   417→                          </Button>
+   418→                        </div>
+   419→                      </TableCell>
+   420→                    </TableRow>
+   421→                  );
+   422→                })}
+   423→              </TableBody>
+   424→            </Table>
+   425→          </ScrollArea>
+   426→        </div>
+   427→      )}
+   428→    </div>
+   429→  );
+   430→}
+   431→
+   432→// ─── Órdenes Tab ───
+   433→
+   434→function OrdersTab() {
+   435→  const { data: orders = [], isLoading } = useQuery<OrderData[]>({
+   436→    queryKey: ['orders'],
+   437→    queryFn: () => getOrders() as Promise<OrderData[]>,
+   438→  });
+   439→
+   440→  const [selectedOrder, setSelectedOrder] = useState<OrderData | null>(null);
+   441→
+   442→  const statusColors: Record<string, string> = {
+   443→    PENDING: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
+   444→    CONFIRMED: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+   445→    SHIPPED: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
+   446→    DELIVERED: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
+   447→    CANCELLED: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+   448→  };
+   449→
+   450→  const statusLabels: Record<string, string> = {
+   451→    PENDING: 'Pendiente',
+   452→    CONFIRMED: 'Confirmado',
+   453→    SHIPPED: 'Enviado',
+   454→    DELIVERED: 'Entregado',
+   455→    CANCELLED: 'Cancelado',
+   456→  };
+   457→
+   458→  return (
+   459→    <div className="space-y-4">
+   460→      <h3 className="font-medium">Órdenes de venta</h3>
+   461→
+   462→      {isLoading ? (
+   463→        <Skeleton className="h-96" />
+   464→      ) : (
+   465→        <div className="rounded-lg border overflow-hidden">
+   466→          <ScrollArea className="max-h-96">
+   467→            <Table>
+   468→              <TableHeader>
+   469→                <TableRow>
+   470→                  <TableHead>N° Orden</TableHead>
+   471→                  <TableHead>Cliente</TableHead>
+   472→                  <TableHead>Estado</TableHead>
+   473→                  <TableHead>Almacén</TableHead>
+   474→                  <TableHead className="text-right">Total</TableHead>
+   475→                  <TableHead className="text-right">Ver</TableHead>
+   476→                </TableRow>
+   477→              </TableHeader>
+   478→              <TableBody>
+   479→                {orders.map((order) => (
+   480→                  <TableRow key={order.id}>
+   481→                    <TableCell className="font-mono text-xs font-medium">
+   482→                      {order.orderNumber}
+   483→                    </TableCell>
+   484→                    <TableCell className="text-xs">{order.customerName}</TableCell>
+   485→                    <TableCell>
+   486→                      <Badge
+   487→                        className={`text-[10px] ${statusColors[order.status] || ''}`}
+   488→                      >
+   489→                        {statusLabels[order.status] || order.status}
+   490→                      </Badge>
+   491→                    </TableCell>
+   492→                    <TableCell className="text-xs text-muted-foreground">
+   493→                      {order.warehouse?.name || '-'}
+   494→                    </TableCell>
+   495→                    <TableCell className="text-right font-mono text-sm">
+   496→                      ${order.totalAmount.toLocaleString('es-AR')}
+   497→                    </TableCell>
+   498→                    <TableCell className="text-right">
+   499→                      <Button
+   500→                        size="icon"
+   501→                        variant="ghost"
+   502→                        className="size-7"
+   503→                        onClick={() => setSelectedOrder(order)}
+   504→                      >
+   505→                        <Eye className="size-3.5" />
+   506→                      </Button>
+   507→                    </TableCell>
+   508→                  </TableRow>
+   509→                ))}
+   510→              </TableBody>
+   511→            </Table>
+   512→          </ScrollArea>
+   513→        </div>
+   514→      )}
+   515→
+   516→      {/* Order detail dialog */}
+   517→      <Dialog
+   518→        open={!!selectedOrder}
+   519→        onOpenChange={(open) => !open && setSelectedOrder(null)}
+   520→      >
+   521→        <DialogContent className="max-w-lg">
+   522→          <DialogHeader>
+   523→            <DialogTitle className="font-mono text-sm">
+   524→              {selectedOrder?.orderNumber}
+   525→            </DialogTitle>
+   526→          </DialogHeader>
+   527→          {selectedOrder && (
+   528→            <div className="space-y-4">
+   529→              <div className="grid gap-2 text-sm sm:grid-cols-2">
+   530→                <div>
+   531→                  <p className="text-muted-foreground">Cliente</p>
+   532→                  <p className="font-medium">{selectedOrder.customerName}</p>
+   533→                </div>
+   534→                <div>
+   535→                  <p className="text-muted-foreground">Email</p>
+   536→                  <p>{selectedOrder.customerEmail || '-'}</p>
+   537→                </div>
+   538→                <div>
+   539→                  <p className="text-muted-foreground">Teléfono</p>
+   540→                  <p>{selectedOrder.customerPhone || '-'}</p>
+   541→                </div>
+   542→                <div>
+   543→                  <p className="text-muted-foreground">Ciudad</p>
+   544→                  <p>{selectedOrder.customerCity || '-'}</p>
+   545→                </div>
+   546→                <div>
+   547→                  <p className="text-muted-foreground">Almacén</p>
+   548→                  <p>{selectedOrder.warehouse?.name || '-'}</p>
+   549→                </div>
+   550→                <div>
+   551→                  <p className="text-muted-foreground">Pago</p>
+   552→                  <p>{selectedOrder.paymentMethod || 'Pendiente'}</p>
+   553→                </div>
+   554→              </div>
+   555→
+   556→              <Separator />
+   557→
+   558→              <div>
+   559→                <p className="mb-2 text-sm font-medium">Items</p>
+   560→                <div className="space-y-1.5">
+   561→                  {selectedOrder.items.map((item) => (
+   562→                    <div
+   563→                      key={item.id}
+   564→                      className="flex justify-between text-sm"
+   565→                    >
+   566→                      <span className="text-muted-foreground">
+   567→                        {item.title} × {item.quantity}
+   568→                      </span>
+   569→                      <span className="font-mono">
+   570→                        ${item.subtotal.toLocaleString('es-AR')}
+   571→                      </span>
+   572→                    </div>
+   573→                  ))}
+   574→                </div>
+   575→              </div>
+   576→
+   577→              <Separator />
+   578→
+   579→              <div className="space-y-1 text-sm">
+   580→                <div className="flex justify-between">
+   581→                  <span className="text-muted-foreground">Subtotal</span>
+   582→                  <span>${selectedOrder.subtotal.toLocaleString('es-AR')}</span>
+   583→                </div>
+   584→                {selectedOrder.discountAmount > 0 && (
+   585→                  <div className="flex justify-between text-amber-600">
+   586→                    <span>Descuento</span>
+   587→                    <span>-${selectedOrder.discountAmount.toLocaleString('es-AR')}</span>
+   588→                  </div>
+   589→                )}
+   590→                <div className="flex justify-between font-semibold border-t pt-1">
+   591→                  <span>Total</span>
+   592→                  <span className="text-primary">
+   593→                    ${selectedOrder.totalAmount.toLocaleString('es-AR')}
+   594→                  </span>
+   595→                </div>
+   596→              </div>
+   597→
+   598→              <p className="text-xs text-muted-foreground">
+   599→                Creada:{' '}
+   600→                {new Date(selectedOrder.createdAt).toLocaleString('es-AR')}
+   601→              </p>
+   602→            </div>
+   603→          )}
+   604→        </DialogContent>
+   605→      </Dialog>
+   606→    </div>
+   607→  );
+   608→}
+   609→
+   610→// ─── Libros Tab (Admin CRUD) ───
+   611→
+   612→const bookFormSchema = z.object({
+   613→  title: z.string().min(2, 'El título es requerido'),
+   614→  price: z.coerce.number().min(1, 'El precio debe ser mayor a 0'),
+   615→  costPrice: z.coerce.number().optional(),
+   616→  pages: z.coerce.number().optional(),
+   617→  publicationYear: z.coerce.number().optional(),
+   618→  synopsis: z.string().optional(),
+   619→  originType: z.string(),
+   620→  publisherId: z.string().optional(),
+   621→  language: z.string().optional(),
+   622→});
+   623→
+   624→type BookFormValues = z.infer<typeof bookFormSchema>;
+   625→
+   626→function LibrosTab() {
+   627→  const queryClient = useQueryClient();
+   628→  const [editBook, setEditBook] = useState<any>(null);
+   629→  const [showCreate, setShowCreate] = useState(false);
+   630→
+   631→  const { data: books = [], isLoading } = useQuery({
+   632→    queryKey: ['all-books'],
+   633→    queryFn: getAllBooks,
+   634→  });
+   635→
+   636→  const { data: authors = [] } = useQuery({
+   637→    queryKey: ['authors'],
+   638→    queryFn: getAllAuthors,
+   639→  });
+   640→
+   641→  const { data: publishers = [] } = useQuery({
+   642→    queryKey: ['publishers'],
+   643→    queryFn: getAllPublishers,
+   644→  });
+   645→
+   646→  const updateMutation = useMutation({
+   647→    mutationFn: ({ id, data }: { id: string; data: Record<string, unknown> }) =>
+   648→      updateBook(id, data as Parameters<typeof updateBook>[1]),
+   649→    onSuccess: () => {
+   650→      queryClient.invalidateQueries({ queryKey: ['all-books'] });
+   651→      toast.success('Libro actualizado');
+   652→      setEditBook(null);
+   653→    },
+   654→    onError: (err: Error) => toast.error(err.message),
+   655→  });
+   656→
+   657→  const createMutation = useMutation({
+   658→    mutationFn: createBook,
+   659→    onSuccess: () => {
+   660→      queryClient.invalidateQueries({ queryKey: ['all-books'] });
+   661→      toast.success('Libro creado');
+   662→      setShowCreate(false);
+   663→    },
+   664→    onError: (err: Error) => toast.error(err.message),
+   665→  });
+   666→
+   667→  return (
+   668→    <div className="space-y-4">
+   669→      <div className="flex items-center justify-between">
+   670→        <h3 className="font-medium">Gestión de libros</h3>
+   671→        <Button size="sm" className="gap-1.5" onClick={() => setShowCreate(true)}>
+   672→          <PlusCircle className="size-3.5" />
+   673→          Nuevo libro
+   674→        </Button>
+   675→      </div>
+   676→
+   677→      {isLoading ? (
+   678→        <Skeleton className="h-96" />
+   679→      ) : (
+   680→        <div className="rounded-lg border overflow-hidden">
+   681→          <ScrollArea className="max-h-96">
+   682→            <Table>
+   683→              <TableHeader>
+   684→                <TableRow>
+   685→                  <TableHead>Título</TableHead>
+   686→                  <TableHead>Autores</TableHead>
+   687→                  <TableHead>Origen</TableHead>
+   688→                  <TableHead className="text-right">Precio</TableHead>
+   689→                  <TableHead className="text-center">Estado</TableHead>
+   690→                  <TableHead className="text-right">Editar</TableHead>
+   691→                </TableRow>
+   692→              </TableHeader>
+   693→              <TableBody>
+   694→                {books.map((book: any) => (
+   695→                  <TableRow key={book.id}>
+   696→                    <TableCell className="font-medium text-xs max-w-[180px] truncate">
+   697→                      {book.title}
+   698→                    </TableCell>
+   699→                    <TableCell className="text-xs text-muted-foreground max-w-[150px] truncate">
+   700→                      {book.authors?.map((a: any) => a.author.name).join(', ') || '-'}
+   701→                    </TableCell>
+   702→                    <TableCell>
+   703→                      <Badge
+   704→                        variant={book.originType === 'PROPIO' ? 'default' : 'outline'}
+   705→                        className="text-[10px]"
+   706→                      >
+   707→                        {book.originType === 'PROPIO' ? 'Propio' : 'Tercero'}
+   708→                      </Badge>
+   709→                    </TableCell>
+   710→                    <TableCell className="text-right font-mono text-sm">
+   711→                      ${book.price.toLocaleString('es-AR')}
+   712→                    </TableCell>
+   713→                    <TableCell className="text-center">
+   714→                      <div className="flex items-center justify-center gap-1">
+   715→                        <Badge
+   716→                          variant={book.isActive ? 'outline' : 'destructive'}
+   717→                          className="text-[10px]"
+   718→                        >
+   719→                          {book.isActive ? 'Activo' : 'Inactivo'}
+   720→                        </Badge>
+   721→                        {book.isFeatured && (
+   722→                          <Badge className="bg-amber-500 text-white text-[10px]">
+   723→                            ★
+   724→                          </Badge>
+   725→                        )}
+   726→                      </div>
+   727→                    </TableCell>
+   728→                    <TableCell className="text-right">
+   729→                      <Button
+   730→                        size="icon"
+   731→                        variant="ghost"
+   732→                        className="size-7"
+   733→                        onClick={() => setEditBook(book)}
+   734→                      >
+   735→                        <Edit className="size-3.5" />
+   736→                      </Button>
+   737→                    </TableCell>
+   738→                  </TableRow>
+   739→                ))}
+   740→              </TableBody>
+   741→            </Table>
+   742→          </ScrollArea>
+   743→        </div>
+   744→      )}
+   745→
+   746→      {/* Edit dialog */}
+   747→      <Dialog open={!!editBook} onOpenChange={(open) => !open && setEditBook(null)}>
+   748→        <DialogContent className="max-w-md">
+   749→          <DialogHeader>
+   750→            <DialogTitle>Editar libro</DialogTitle>
+   751→          </DialogHeader>
+   752→          {editBook && (
+   753→            <EditBookForm
+   754→              book={editBook}
+   755→              onSubmit={(data) =>
+   756→                updateMutation.mutate({ id: editBook.id, data })
+   757→              }
+   758→              onCancel={() => setEditBook(null)}
+   759→            />
+   760→          )}
+   761→        </DialogContent>
+   762→      </Dialog>
+   763→
+   764→      {/* Create dialog */}
+   765→      <Dialog open={showCreate} onOpenChange={setShowCreate}>
+   766→        <DialogContent className="max-w-md">
+   767→          <DialogHeader>
+   768→            <DialogTitle>Nuevo libro</DialogTitle>
+   769→          </DialogHeader>
+   770→          <CreateBookForm
+   771→            authors={authors}
+   772→            publishers={publishers}
+   773→            onSubmit={(data) => createMutation.mutate(data)}
+   774→            onCancel={() => setShowCreate(false)}
+   775→            loading={createMutation.isPending}
+   776→          />
+   777→        </DialogContent>
+   778→      </Dialog>
+   779→    </div>
+   780→  );
+   781→}
+   782→
+   783→function EditBookForm({
+   784→  book,
+   785→  onSubmit,
+   786→  onCancel,
+   787→}: {
+   788→  book: any;
+   789→  onSubmit: (data: Record<string, unknown>) => void;
+   790→  onCancel: () => void;
+   791→}) {
+   792→  const [title, setTitle] = useState(book.title);
+   793→  const [price, setPrice] = useState(String(book.price));
+   794→  const [costPrice, setCostPrice] = useState(String(book.costPrice || ''));
+   795→  const [isActive, setIsActive] = useState(book.isActive);
+   796→  const [isFeatured, setIsFeatured] = useState(book.isFeatured);
+   797→  const [synopsis, setSynopsis] = useState(book.synopsis || '');
+   798→  const [pages, setPages] = useState(String(book.pages || ''));
+   799→  const [year, setYear] = useState(String(book.publicationYear || ''));
+   800→
+   801→  const handleSubmit = (e: React.FormEvent) => {
+   802→    e.preventDefault();
+   803→    onSubmit({
+   804→      title,
+   805→      price: Number(price),
+   806→      costPrice: costPrice ? Number(costPrice) : undefined,
+   807→      isActive,
+   808→      isFeatured,
+   809→      synopsis: synopsis || undefined,
+   810→      pages: pages ? Number(pages) : undefined,
+   811→      publicationYear: year ? Number(year) : undefined,
+   812→    });
+   813→  };
+   814→
+   815→  return (
+   816→    <form onSubmit={handleSubmit} className="space-y-3">
+   817→      <div className="space-y-1">
+   818→        <Label className="text-xs">Título</Label>
+   819→        <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+   820→      </div>
+   821→      <div className="grid grid-cols-2 gap-3">
+   822→        <div className="space-y-1">
+   823→          <Label className="text-xs">Precio</Label>
+   824→          <Input
+   825→            type="number"
+   826→            value={price}
+   827→            onChange={(e) => setPrice(e.target.value)}
+   828→          />
+   829→        </div>
+   830→        <div className="space-y-1">
+   831→          <Label className="text-xs">Costo</Label>
+   832→          <Input
+   833→            type="number"
+   834→            value={costPrice}
+   835→            onChange={(e) => setCostPrice(e.target.value)}
+   836→          />
+   837→        </div>
+   838→      </div>
+   839→      <div className="grid grid-cols-2 gap-3">
+   840→        <div className="space-y-1">
+   841→          <Label className="text-xs">Páginas</Label>
+   842→          <Input
+   843→            type="number"
+   844→            value={pages}
+   845→            onChange={(e) => setPages(e.target.value)}
+   846→          />
+   847→        </div>
+   848→        <div className="space-y-1">
+   849→          <Label className="text-xs">Año</Label>
+   850→          <Input
+   851→            type="number"
+   852→            value={year}
+   853→            onChange={(e) => setYear(e.target.value)}
+   854→          />
+   855→        </div>
+   856→      </div>
+   857→      <div className="space-y-1">
+   858→        <Label className="text-xs">Sinopsis</Label>
+   859→        <Input value={synopsis} onChange={(e) => setSynopsis(e.target.value)} />
+   860→      </div>
+   861→      <div className="flex items-center gap-4">
+   862→        <div className="flex items-center gap-2">
+   863→          <Switch checked={isActive} onCheckedChange={setIsActive} />
+   864→          <Label className="text-xs">Activo</Label>
+   865→        </div>
+   866→        <div className="flex items-center gap-2">
+   867→          <Switch checked={isFeatured} onCheckedChange={setIsFeatured} />
+   868→          <Label className="text-xs">Destacado</Label>
+   869→        </div>
+   870→      </div>
+   871→      <div className="flex gap-2 pt-2">
+   872→        <Button type="submit" className="flex-1" disabled={false}>
+   873→          Guardar
+   874→        </Button>
+   875→        <Button type="button" variant="outline" onClick={onCancel}>
+   876→          Cancelar
+   877→        </Button>
+   878→      </div>
+   879→    </form>
+   880→  );
+   881→}
+   882→
+   883→function CreateBookForm({
+   884→  authors,
+   885→  publishers,
+   886→  onSubmit,
+   887→  onCancel,
+   888→  loading,
+   889→}: {
+   890→  authors: any[];
+   891→  publishers: any[];
+   892→  onSubmit: (data: any) => void;
+   893→  onCancel: () => void;
+   894→  loading: boolean;
+   895→}) {
+   896→  const [title, setTitle] = useState('');
+   897→  const [price, setPrice] = useState('');
+   898→  const [costPrice, setCostPrice] = useState('');
+   899→  const [originType, setOriginType] = useState('PROPIO');
+   900→  const [publisherId, setPublisherId] = useState('');
+   901→  const [synopsis, setSynopsis] = useState('');
+   902→  const [pages, setPages] = useState('');
+   903→  const [year, setYear] = useState('');
+   904→
+   905→  const handleSubmit = (e: React.FormEvent) => {
+   906→    e.preventDefault();
+   907→    onSubmit({
+   908→      title,
+   909→      price: Number(price),
+   910→      costPrice: costPrice ? Number(costPrice) : undefined,
+   911→      originType,
+   912→      publisherId: originType === 'TERCERO' ? publisherId : undefined,
+   913→      synopsis: synopsis || undefined,
+   914→      pages: pages ? Number(pages) : undefined,
+   915→      publicationYear: year ? Number(year) : undefined,
+   916→    });
+   917→  };
+   918→
+   919→  return (
+   920→    <form onSubmit={handleSubmit} className="space-y-3">
+   921→      <div className="space-y-1">
+   922→        <Label className="text-xs">Título *</Label>
+   923→        <Input
+   924→          value={title}
+   925→          onChange={(e) => setTitle(e.target.value)}
+   926→          required
+   927→        />
+   928→      </div>
+   929→      <div className="grid grid-cols-2 gap-3">
+   930→        <div className="space-y-1">
+   931→          <Label className="text-xs">Precio *</Label>
+   932→          <Input
+   933→            type="number"
+   934→            value={price}
+   935→            onChange={(e) => setPrice(e.target.value)}
+   936→            required
+   937→          />
+   938→        </div>
+   939→        <div className="space-y-1">
+   940→          <Label className="text-xs">Costo</Label>
+   941→          <Input
+   942→            type="number"
+   943→            value={costPrice}
+   944→            onChange={(e) => setCostPrice(e.target.value)}
+   945→          />
+   946→        </div>
+   947→      </div>
+   948→      <div className="space-y-1">
+   949→        <Label className="text-xs">Tipo de fondo *</Label>
+   950→        <Select value={originType} onValueChange={setOriginType}>
+   951→          <SelectTrigger className="w-full">
+   952→            <SelectValue />
+   953→          </SelectTrigger>
+   954→          <SelectContent>
+   955→            <SelectItem value="PROPIO">Fondo Propio</SelectItem>
+   956→            <SelectItem value="TERCERO">Tercero</SelectItem>
+   957→          </SelectContent>
+   958→        </Select>
+   959→      </div>
+   960→      {originType === 'TERCERO' && (
+   961→        <div className="space-y-1">
+   962→          <Label className="text-xs">Editorial</Label>
+   963→          <Select value={publisherId} onValueChange={setPublisherId}>
+   964→            <SelectTrigger className="w-full">
+   965→              <SelectValue placeholder="Seleccionar editorial" />
+   966→            </SelectTrigger>
+   967→            <SelectContent>
+   968→              {publishers.map((p: any) => (
+   969→                <SelectItem key={p.id} value={p.id}>
+   970→                  {p.name}
+   971→                </SelectItem>
+   972→              ))}
+   973→            </SelectContent>
+   974→          </Select>
+   975→        </div>
+   976→      )}
+   977→      <div className="grid grid-cols-2 gap-3">
+   978→        <div className="space-y-1">
+   979→          <Label className="text-xs">Páginas</Label>
+   980→          <Input
+   981→            type="number"
+   982→            value={pages}
+   983→            onChange={(e) => setPages(e.target.value)}
+   984→          />
+   985→        </div>
+   986→        <div className="space-y-1">
+   987→          <Label className="text-xs">Año publicación</Label>
+   988→          <Input
+   989→            type="number"
+   990→            value={year}
+   991→            onChange={(e) => setYear(e.target.value)}
+   992→          />
+   993→        </div>
+   994→      </div>
+   995→      <div className="space-y-1">
+   996→        <Label className="text-xs">Sinopsis</Label>
+   997→        <Input value={synopsis} onChange={(e) => setSynopsis(e.target.value)} />
+   998→      </div>
+   999→      <div className="flex gap-2 pt-2">
+  1000→        <Button type="submit" className="flex-1" disabled={loading}>
+  1001→          Crear libro
+  1002→        </Button>
+  1003→        <Button type="button" variant="outline" onClick={onCancel}>
+  1004→          Cancelar
+  1005→        </Button>
+  1006→      </div>
+  1007→    </form>
+  1008→  );
+  1009→}
+  1010→
+  1011→// ─── Main Admin Panel ───
+  1012→
+  1013→export function AdminPanel() {
+  1014→  const { isAdminAuth, setAdminAuth } = useAppStore();
+  1015→
+  1016→  if (!isAdminAuth) {
+  1017→    return (
+  1018→      <SectionWrapper id="admin" className="py-16 sm:py-20">
+  1019→        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1020→          <div className="text-center mb-8">
+  1021→            <h2 className="font-serif text-3xl font-bold sm:text-4xl">
+  1022→              Administración
+  1023→            </h2>
+  1024→          </div>
+  1025→          <AdminLogin onAuth={() => setAdminAuth(true)} />
+  1026→        </div>
+  1027→      </SectionWrapper>
+  1028→    );
+  1029→  }
+  1030→
+  1031→  return (
+  1032→    <SectionWrapper id="admin" className="py-16 sm:py-20">
+  1033→      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1034→        <div className="mb-8">
+  1035→          <h2 className="font-serif text-3xl font-bold sm:text-4xl">
+  1036→            Panel de Administración
+  1037→          </h2>
+  1038→          <p className="mt-1 text-sm text-muted-foreground">
+  1039→            Gestión integral del catálogo, inventario y ventas
+  1040→          </p>
+  1041→        </div>
+  1042→
+  1043→        <Tabs defaultValue="dashboard">
+  1044→          <TabsList className="mb-6">
+  1045→            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+  1046→            <TabsTrigger value="inventario">Inventario</TabsTrigger>
+  1047→            <TabsTrigger value="ordenes">Órdenes</TabsTrigger>
+  1048→            <TabsTrigger value="libros">Libros</TabsTrigger>
+  1049→          </TabsList>
+  1050→
+  1051→          <TabsContent value="dashboard">
+  1052→            <DashboardTab />
+  1053→          </TabsContent>
+  1054→          <TabsContent value="inventario">
+  1055→            <InventarioTab />
+  1056→          </TabsContent>
+  1057→          <TabsContent value="ordenes">
+  1058→            <OrdersTab />
+  1059→          </TabsContent>
+  1060→          <TabsContent value="libros">
+  1061→            <LibrosTab />
+  1062→          </TabsContent>
+  1063→        </Tabs>
+  1064→      </div>
+  1065→    </SectionWrapper>
+  1066→  );
+  1067→}
+  1068→
+  1069→

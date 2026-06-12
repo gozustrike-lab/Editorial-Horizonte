@@ -63,22 +63,20 @@ import {
   PlusCircle,
   Eye,
 } from 'lucide-react';
-import {
-  getDashboardStats,
-  getOrders,
-  getInventoryByWarehouse,
-  getAllBooks,
-  updateBook,
-  updateInventory,
-  getAllAuthors,
-  getAllPublishers,
-  createBook,
-  getWarehouses,
-} from '@/lib/actions';
+// ─── API helpers (replaces server actions for proxy compatibility) ───
+const apiGet = (resource: string, params?: Record<string, string>) => {
+  const url = params
+    ? `/api?resource=${resource}&${new URLSearchParams(params).toString()}`
+    : `/api?resource=${resource}`;
+  return fetch(url).then((r) => { if (!r.ok) throw new Error('API error'); return r.json(); });
+};
+const apiPost = (action: string, body: unknown) =>
+  fetch(`/api?action=${action}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+    .then((r) => r.json());
 import { useAppStore } from '@/lib/store';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type {
   DashboardStats,
@@ -100,7 +98,7 @@ function AdminLogin({ onAuth }: { onAuth: () => void }) {
     setError('');
     try {
       const result = await import('@/lib/actions').then((m) =>
-        m.loginAdmin(password)
+        apiPost('loginAdmin', { password })
       );
       if (result) {
         onAuth();
@@ -151,7 +149,7 @@ function AdminLogin({ onAuth }: { onAuth: () => void }) {
 function DashboardTab() {
   const { data: stats, isLoading } = useQuery<DashboardStats>({
     queryKey: ['dashboard'],
-    queryFn: () => getDashboardStats(),
+    queryFn: () => apiGet('dashboard'),
   });
 
   if (isLoading) {
@@ -282,15 +280,13 @@ function InventarioTab() {
 
   const { data: warehouses = [] } = useQuery<Warehouse[]>({
     queryKey: ['warehouses-inv'],
-    queryFn: () => getWarehouses() as Promise<Warehouse[]>,
+    queryFn: () => apiGet('warehouses') as Promise<Warehouse[]>,
   });
 
   const { data: inventory = [], isLoading } = useQuery<InventoryRecord[]>({
     queryKey: ['inventory', warehouseFilter],
     queryFn: () =>
-      getInventoryByWarehouse(
-        warehouseFilter === 'all' ? undefined : warehouseFilter
-      ) as Promise<InventoryRecord[]>,
+      apiGet('inventory', warehouseFilter === 'all' ? undefined : { warehouseId: warehouseFilter }) as Promise<InventoryRecord[]>,
   });
 
   const queryClient = useQueryClient();
@@ -306,7 +302,7 @@ function InventarioTab() {
       warehouseId: string;
       delta: number;
       type: string;
-    }) => updateInventory(bookId, warehouseId, delta, type),
+    }) => apiPost('updateInventory', { bookId, warehouseId, delta, movementType: type }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['inventory'] });
       toast.success('Stock actualizado');
@@ -434,7 +430,7 @@ function InventarioTab() {
 function OrdersTab() {
   const { data: orders = [], isLoading } = useQuery<OrderData[]>({
     queryKey: ['orders'],
-    queryFn: () => getOrders() as Promise<OrderData[]>,
+    queryFn: () => apiGet('orders') as Promise<OrderData[]>,
   });
 
   const [selectedOrder, setSelectedOrder] = useState<OrderData | null>(null);
@@ -630,22 +626,22 @@ function LibrosTab() {
 
   const { data: books = [], isLoading } = useQuery({
     queryKey: ['all-books'],
-    queryFn: getAllBooks,
+    queryFn: () => apiGet('allbooks'),
   });
 
   const { data: authors = [] } = useQuery({
     queryKey: ['authors'],
-    queryFn: getAllAuthors,
+    queryFn: () => apiGet('authors'),
   });
 
   const { data: publishers = [] } = useQuery({
     queryKey: ['publishers'],
-    queryFn: getAllPublishers,
+    queryFn: () => apiGet('publishers'),
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: Record<string, unknown> }) =>
-      updateBook(id, data as Parameters<typeof updateBook>[1]),
+      apiPost('updateBook', { id, ...data }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['all-books'] });
       toast.success('Libro actualizado');
@@ -655,7 +651,7 @@ function LibrosTab() {
   });
 
   const createMutation = useMutation({
-    mutationFn: createBook,
+    mutationFn: (data: Record<string, unknown>) => apiPost('createBook', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['all-books'] });
       toast.success('Libro creado');

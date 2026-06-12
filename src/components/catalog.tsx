@@ -8,12 +8,36 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Search, X, SlidersHorizontal } from 'lucide-react';
-import { getBooks, getCategories } from '@/lib/actions';
 import { useAppStore } from '@/lib/store';
 import { BookCard } from '@/components/book-card';
 import { BookDetail } from '@/components/book-detail';
 import { SectionWrapper } from '@/components/section-wrapper';
 import type { BookWithDetails, CategoryData } from '@/lib/types';
+
+async function fetchBooks(filters: {
+  search?: string;
+  categoryId?: string;
+  originType?: string;
+  minPrice?: number;
+  maxPrice?: number;
+}): Promise<BookWithDetails[]> {
+  const params = new URLSearchParams();
+  params.set('resource', 'books');
+  if (filters.search) params.set('search', filters.search);
+  if (filters.categoryId) params.set('categoryId', filters.categoryId);
+  if (filters.originType) params.set('originType', filters.originType);
+  if (filters.minPrice !== undefined) params.set('minPrice', String(filters.minPrice));
+  if (filters.maxPrice !== undefined) params.set('maxPrice', String(filters.maxPrice));
+  const res = await fetch(`/api?${params.toString()}`);
+  if (!res.ok) throw new Error('Error al cargar libros');
+  return res.json();
+}
+
+async function fetchCategories(): Promise<CategoryData[]> {
+  const res = await fetch('/api?resource=categories');
+  if (!res.ok) throw new Error('Error al cargar categorías');
+  return res.json();
+}
 
 export function CatalogSection() {
   const {
@@ -44,20 +68,20 @@ export function CatalogSection() {
   // Fetch categories
   const { data: categories = [] } = useQuery<CategoryData[]>({
     queryKey: ['categories'],
-    queryFn: () => getCategories() as Promise<CategoryData[]>,
+    queryFn: fetchCategories,
   });
 
   // Fetch books
   const { data: books = [], isLoading } = useQuery<BookWithDetails[]>({
     queryKey: ['books', debouncedSearch, filters],
     queryFn: () =>
-      getBooks({
+      fetchBooks({
         search: debouncedSearch || undefined,
         categoryId: filters.categoryId,
         originType: filters.originType,
         minPrice: filters.minPrice,
         maxPrice: filters.maxPrice,
-      }) as Promise<BookWithDetails[]>,
+      }),
   });
 
   const activeFilterCount = useMemo(() => {
@@ -143,22 +167,17 @@ export function CatalogSection() {
                 <div className="flex flex-wrap gap-2">
                   <Button
                     size="sm"
-                    variant={
-                      !filters.originType ? 'default' : 'outline'
-                    }
+                    variant={!filters.originType ? 'default' : 'outline'}
                     onClick={() => setFilters({ originType: undefined })}
                   >
                     Todos
                   </Button>
                   <Button
                     size="sm"
-                    variant={
-                      filters.originType === 'PROPIO' ? 'default' : 'outline'
-                    }
+                    variant={filters.originType === 'PROPIO' ? 'default' : 'outline'}
                     onClick={() =>
                       setFilters({
-                        originType:
-                          filters.originType === 'PROPIO' ? undefined : 'PROPIO',
+                        originType: filters.originType === 'PROPIO' ? undefined : 'PROPIO',
                       })
                     }
                   >
@@ -166,13 +185,10 @@ export function CatalogSection() {
                   </Button>
                   <Button
                     size="sm"
-                    variant={
-                      filters.originType === 'TERCERO' ? 'default' : 'outline'
-                    }
+                    variant={filters.originType === 'TERCERO' ? 'default' : 'outline'}
                     onClick={() =>
                       setFilters({
-                        originType:
-                          filters.originType === 'TERCERO' ? undefined : 'TERCERO',
+                        originType: filters.originType === 'TERCERO' ? undefined : 'TERCERO',
                       })
                     }
                   >
@@ -184,9 +200,7 @@ export function CatalogSection() {
                 <div className="flex flex-wrap gap-2">
                   <Button
                     size="sm"
-                    variant={
-                      !filters.categoryId ? 'default' : 'outline'
-                    }
+                    variant={!filters.categoryId ? 'default' : 'outline'}
                     onClick={() => setFilters({ categoryId: undefined })}
                   >
                     Todas las categorías
@@ -195,13 +209,10 @@ export function CatalogSection() {
                     <Button
                       key={cat.id}
                       size="sm"
-                      variant={
-                        filters.categoryId === cat.id ? 'default' : 'outline'
-                      }
+                      variant={filters.categoryId === cat.id ? 'default' : 'outline'}
                       onClick={() =>
                         setFilters({
-                          categoryId:
-                            filters.categoryId === cat.id ? undefined : cat.id,
+                          categoryId: filters.categoryId === cat.id ? undefined : cat.id,
                         })
                       }
                     >

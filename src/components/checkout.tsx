@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Dialog,
   DialogContent,
@@ -24,14 +24,12 @@ import {
 } from '@/components/ui/select';
 import { Loader2, CheckCircle } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
-import { createOrder, getWarehouses } from '@/lib/actions';
-import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import type { Warehouse } from '@/lib/types';
 
 const checkoutSchema = z.object({
   customerName: z.string().min(2, 'El nombre es requerido'),
-  customerEmail: z.email('Email inválido'),
+  customerEmail: z.string().email('Email inválido'),
   customerPhone: z.string().min(6, 'El teléfono es requerido'),
   customerAddress: z.string().min(5, 'La dirección es requerida'),
   customerCity: z.string().min(2, 'La ciudad es requerida'),
@@ -39,6 +37,23 @@ const checkoutSchema = z.object({
 });
 
 type CheckoutForm = z.infer<typeof checkoutSchema>;
+
+async function fetchWarehouses(): Promise<Warehouse[]> {
+  const res = await fetch('/api?resource=warehouses');
+  if (!res.ok) throw new Error('Error al cargar puntos de retiro');
+  return res.json();
+}
+
+async function submitOrder(data: CheckoutForm & { items: Array<{ bookId: string; title: string; price: number; quantity: number; originType: string }> }) {
+  const res = await fetch('/api?action=createOrder', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  const result = await res.json();
+  if (!res.ok) throw new Error(result.error || 'Error al crear el pedido');
+  return result;
+}
 
 export function CheckoutDialog() {
   const { checkoutOpen, setCheckoutOpen, cartItems, clearCart } = useAppStore();
@@ -49,7 +64,7 @@ export function CheckoutDialog() {
 
   const { data: warehouses = [] } = useQuery<Warehouse[]>({
     queryKey: ['warehouses'],
-    queryFn: () => getWarehouses() as Promise<Warehouse[]>,
+    queryFn: fetchWarehouses,
   });
 
   const {
@@ -71,13 +86,7 @@ export function CheckoutDialog() {
   });
 
   const mutation = useMutation({
-    mutationFn: async (data: CheckoutForm) => {
-      const result = await createOrder({
-        ...data,
-        items: cartItems,
-      });
-      return result;
-    },
+    mutationFn: (data: CheckoutForm) => submitOrder({ ...data, items: cartItems }),
     onSuccess: (data) => {
       setOrderNumber(data.orderNumber);
       setSuccess(true);
