@@ -96,10 +96,6 @@ export function CatalogSection() {
     setSearchQuery('');
   }, [resetFilters, setSearchQuery]);
 
-  // Featured books
-  const featured = books.filter((b) => b.isFeatured);
-  const regular = books.filter((b) => !b.isFeatured);
-
   // Selected book for detail
   const selectedBook = books.find((b) => b.id === selectedBookId) || null;
 
@@ -241,30 +237,22 @@ export function CatalogSection() {
             : `${books.length} libro${books.length !== 1 ? 's' : ''} encontrado${books.length !== 1 ? 's' : ''}`}
         </p>
 
-        {/* Loading skeletons — match new card heights */}
+        {/* Loading skeletons */}
         {isLoading && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-[340px] sm:h-[400px] rounded-2xl overflow-hidden">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="aspect-[3/4] sm:aspect-[3/4.2] rounded-2xl overflow-hidden">
                 <Skeleton className="h-full w-full rounded-2xl" />
               </div>
             ))}
           </div>
         )}
 
-        {/* Books grid - Bento style */}
+        {/* Books grid — responsive, uniform cards */}
         {!isLoading && books.length > 0 && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             <AnimatePresence mode="popLayout">
-              {featured.map((book) => (
-                <BookCard
-                  key={book.id}
-                  book={book}
-                  featured
-                  onClick={() => setSelectedBookId(book.id)}
-                />
-              ))}
-              {regular.map((book) => (
+              {books.map((book) => (
                 <BookCard
                   key={book.id}
                   book={book}
