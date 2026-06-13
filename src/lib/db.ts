@@ -1,13 +1,3 @@
-import { PrismaClient } from '@prisma/client'
-
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined
-}
-
-export const db =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    log: ['query'],
-  })
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
+// Stub: Prisma client not used in Vercel deployment.
+// For local dev with SQLite, install @prisma/client and restore the original file.
+export const db = null as any;

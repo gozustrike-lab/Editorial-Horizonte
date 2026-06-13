@@ -1,5 +1,48 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import seedData from "@/data/seed-data.json";
+
+// ─── In-memory state (mutations live in memory — acceptable for Vercel demo) ───
+const state = {
+  books: JSON.parse(JSON.stringify(seedData.books)) as typeof seedData.books,
+  inventory: JSON.parse(JSON.stringify(seedData.inventory)) as typeof seedData.inventory,
+  orders: JSON.parse(JSON.stringify(seedData.orders)) as typeof seedData.orders,
+  orderItems: JSON.parse(JSON.stringify(seedData.orderItems)) as typeof seedData.orderItems,
+  auditLog: JSON.parse(JSON.stringify(seedData.auditLog)) as typeof seedData.auditLog,
+};
+
+// Helper: get total stock for a book across all warehouses
+function getTotalStock(bookId: string): number {
+  return state.inventory
+    .filter((i) => i.bookId === bookId)
+    .reduce((sum, i) => sum + i.stockDisponible, 0);
+}
+
+// Helper: find book with enriched data
+function enrichBook(book: (typeof seedData.books)[0]) {
+  const authors = seedData.bookAuthors
+    .filter((ba) => ba.bookId === book.id)
+    .sort((a, b) => a.order - b.order)
+    .map((ba) => {
+      const author = seedData.authors.find((a) => a.id === ba.authorId)!;
+      return { authorId: author.id, order: ba.order, author: { id: author.id, name: author.name, nationality: author.nationality } };
+    });
+  const categories = seedData.bookCategories
+    .filter((bc) => bc.bookId === book.id)
+    .map((bc) => {
+      const cat = seedData.categories.find((c) => c.id === bc.categoryId)!;
+      return { categoryId: cat.id, category: { id: cat.id, name: cat.name, slug: cat.slug } };
+    });
+  const publisher = book.publisherId
+    ? seedData.publishers.find((p) => p.id === book.publisherId)
+    : null;
+  return {
+    ...book,
+    authors,
+    categories,
+    publisher: publisher ? { id: publisher.id, name: publisher.name, country: publisher.country } : null,
+    totalStock: getTotalStock(book.id),
+  };
+}
 
 // ─── GET /api?resource=books|categories|warehouses|orders|inventory|dashboard|authors|publishers|allbooks ───
 
@@ -13,181 +56,138 @@ export async function GET(request: NextRequest) {
         const search = searchParams.get("search") || undefined;
         const categoryId = searchParams.get("categoryId") || undefined;
         const originType = searchParams.get("originType") || undefined;
-        const minPrice = searchParams.get("minPrice")
-          ? Number(searchParams.get("minPrice"))
-          : undefined;
-        const maxPrice = searchParams.get("maxPrice")
-          ? Number(searchParams.get("maxPrice"))
-          : undefined;
+        const minPrice = searchParams.get("minPrice") ? Number(searchParams.get("minPrice")) : undefined;
+        const maxPrice = searchParams.get("maxPrice") ? Number(searchParams.get("maxPrice")) : undefined;
 
-        const where: Record<string, unknown> = { isActive: true };
+        let filtered = state.books.filter((b) => b.isActive);
 
         if (search) {
-          where.OR = [
-            { title: { contains: search } },
-            {
-              authors: {
-                some: { author: { name: { contains: search } } },
-              },
-            },
-          ];
+          const q = search.toLowerCase();
+          filtered = filtered.filter((b) => {
+            const titleMatch = b.title.toLowerCase().includes(q);
+            const authorMatch = seedData.bookAuthors
+              .filter((ba) => ba.bookId === b.id)
+              .some((ba) => {
+                const a = seedData.authors.find((x) => x.id === ba.authorId);
+                return a?.name.toLowerCase().includes(q);
+              });
+            return titleMatch || authorMatch;
+          });
         }
         if (categoryId) {
-          where.categories = { some: { categoryId } };
+          const catBookIds = new Set(
+            seedData.bookCategories.filter((bc) => bc.categoryId === categoryId).map((bc) => bc.bookId)
+          );
+          filtered = filtered.filter((b) => catBookIds.has(b.id));
         }
         if (originType) {
-          where.originType = originType;
+          filtered = filtered.filter((b) => b.originType === originType);
         }
-        if (minPrice !== undefined) {
-          where.price = { ...(where.price as Record<string, unknown>), gte: minPrice };
-        }
-        if (maxPrice !== undefined) {
-          where.price = { ...(where.price as Record<string, unknown>), lte: maxPrice };
-        }
+        if (minPrice !== undefined) filtered = filtered.filter((b) => b.price >= minPrice);
+        if (maxPrice !== undefined) filtered = filtered.filter((b) => b.price <= maxPrice);
 
-        const books = await db.book.findMany({
-          where,
-          include: {
-            authors: {
-              include: { author: { select: { id: true, name: true, nationality: true } } },
-              orderBy: { order: "asc" },
-            },
-            categories: {
-              include: { category: { select: { id: true, name: true, slug: true } } },
-            },
-            publisher: { select: { id: true, name: true, country: true } },
-            inventory: { select: { stockDisponible: true } },
-          },
-          orderBy: { isFeatured: "desc" },
-        });
+        // Sort: featured first
+        filtered.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
 
-        const result = books.map((b) => ({
-          ...b,
-          totalStock: b.inventory.reduce((s: number, i: { stockDisponible: number }) => s + i.stockDisponible, 0),
-          inventory: undefined,
-        }));
-
+        const result = filtered.map(enrichBook);
         return NextResponse.json(result);
       }
 
       case "categories": {
-        const categories = await db.category.findMany({ orderBy: { name: "asc" } });
-        return NextResponse.json(categories);
+        return NextResponse.json(seedData.categories);
       }
 
       case "warehouses": {
-        const warehouses = await db.warehouse.findMany({
-          where: { isActive: true },
-          orderBy: { name: "asc" },
-        });
-        return NextResponse.json(warehouses);
+        return NextResponse.json(seedData.warehouses.filter((w) => w.isActive));
       }
 
       case "orders": {
-        const orders = await db.order.findMany({
-          include: {
-            items: true,
-            warehouse: { select: { id: true, name: true } },
-          },
-          orderBy: { createdAt: "desc" },
-        });
-        return NextResponse.json(orders);
+        const ordersWithItems = state.orders.map((order) => ({
+          ...order,
+          items: state.orderItems.filter((oi) => oi.orderId === order.id),
+          warehouse: order.warehouseId
+            ? { id: order.warehouseId, name: seedData.warehouses.find((w) => w.id === order.warehouseId)?.name || "" }
+            : null,
+        }));
+        ordersWithItems.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        return NextResponse.json(ordersWithItems);
       }
 
       case "inventory": {
         const warehouseId = searchParams.get("warehouseId") || undefined;
-        const where: Record<string, unknown> = {};
-        if (warehouseId) where.warehouseId = warehouseId;
+        let inv = state.inventory;
+        if (warehouseId) inv = inv.filter((i) => i.warehouseId === warehouseId);
 
-        const inventory = await db.inventory.findMany({
-          where,
-          include: {
-            book: { select: { id: true, title: true, isbn: true, price: true, originType: true } },
-            warehouse: { select: { id: true, name: true, city: true } },
-          },
-          orderBy: [{ warehouse: { name: "asc" } }, { book: { title: "asc" } }],
-        });
-        return NextResponse.json(inventory);
+        const result = inv.map((i) => ({
+          ...i,
+          book: (() => {
+            const b = state.books.find((x) => x.id === i.bookId);
+            return b ? { id: b.id, title: b.title, isbn: b.isbn, price: b.price, originType: b.originType } : null;
+          })(),
+          warehouse: (() => {
+            const w = seedData.warehouses.find((x) => x.id === i.warehouseId);
+            return w ? { id: w.id, name: w.name, city: w.city } : null;
+          })(),
+        }));
+        return NextResponse.json(result);
       }
 
       case "dashboard": {
-        const [totalSalesResult, pendingOrders, totalBooks, orders, books] =
-          await Promise.all([
-            db.order.aggregate({
-              where: { status: { not: "CANCELLED" } },
-              _sum: { totalAmount: true },
-            }),
-            db.order.count({ where: { status: "PENDING" } }),
-            db.book.count({ where: { isActive: true } }),
-            db.order.findMany({
-              where: { status: { not: "CANCELLED" } },
-              include: { warehouse: { select: { name: true } }, items: true },
-            }),
-            db.book.findMany({
-              select: { originType: true },
-              where: { isActive: true },
-            }),
-          ]);
+        const nonCancelled = state.orders.filter((o) => o.status !== "CANCELLED");
+        const totalSales = nonCancelled.reduce((s, o) => s + o.totalAmount, 0);
+        const pendingOrders = state.orders.filter((o) => o.status === "PENDING").length;
+        const totalBooks = state.books.filter((b) => b.isActive).length;
+        const totalStock = state.inventory.reduce((s, i) => s + i.stockDisponible, 0);
 
+        // Sales by warehouse
         const warehouseSales: Record<string, number> = {};
-        for (const order of orders) {
-          if (order.warehouse) {
-            warehouseSales[order.warehouse.name] =
-              (warehouseSales[order.warehouse.name] || 0) + order.totalAmount;
+        for (const order of nonCancelled) {
+          if (order.warehouseId) {
+            const wName = seedData.warehouses.find((w) => w.id === order.warehouseId)?.name;
+            if (wName) warehouseSales[wName] = (warehouseSales[wName] || 0) + order.totalAmount;
           }
         }
-        const salesByWarehouse = Object.entries(warehouseSales).map(
-          ([name, sales]) => ({ name, sales: Math.round(sales) })
-        );
+        const salesByWarehouse = Object.entries(warehouseSales).map(([name, sales]) => ({ name, sales: Math.round(sales) }));
 
-        const propio = books.filter((b) => b.originType === "PROPIO").length;
-        const tercero = books.filter((b) => b.originType === "TERCERO").length;
+        // Books by origin
+        const activeBooks = state.books.filter((b) => b.isActive);
+        const propio = activeBooks.filter((b) => b.originType === "PROPIO").length;
+        const tercero = activeBooks.filter((b) => b.originType === "TERCERO").length;
         const booksByOrigin = [
           { name: "Fondo Propio", value: propio, fill: "var(--color-primary)" },
           { name: "Terceros", value: tercero, fill: "oklch(0.75 0.14 75)" },
         ];
 
-        const totalStock = await db.inventory.aggregate({
-          _sum: { stockDisponible: true },
-        });
-
-        return NextResponse.json({
-          totalSales: totalSalesResult._sum.totalAmount || 0,
-          totalStock: totalStock._sum.stockDisponible || 0,
-          pendingOrders,
-          totalBooks,
-          salesByWarehouse,
-          booksByOrigin,
-        });
+        return NextResponse.json({ totalSales, totalStock, pendingOrders, totalBooks, salesByWarehouse, booksByOrigin });
       }
 
       case "authors": {
-        const authors = await db.author.findMany({ orderBy: { name: "asc" } });
-        return NextResponse.json(authors);
+        return NextResponse.json(seedData.authors);
       }
 
       case "publishers": {
-        const publishers = await db.publisher.findMany({
-          where: { isActive: true },
-          orderBy: { name: "asc" },
-        });
-        return NextResponse.json(publishers);
+        return NextResponse.json(seedData.publishers.filter((p) => p.isActive));
       }
 
       case "allbooks": {
-        const allBooks = await db.book.findMany({
-          include: {
-            authors: {
-              include: { author: { select: { id: true, name: true } } },
-              orderBy: { order: "asc" },
-            },
-            categories: {
-              include: { category: { select: { id: true, name: true } } },
-            },
-            publisher: { select: { id: true, name: true } },
-          },
-          orderBy: { createdAt: "desc" },
+        const allBooks = state.books.map((book) => {
+          const authors = seedData.bookAuthors
+            .filter((ba) => ba.bookId === book.id)
+            .sort((a, b) => a.order - b.order)
+            .map((ba) => {
+              const author = seedData.authors.find((a) => a.id === ba.authorId)!;
+              return { authorId: author.id, order: ba.order, author: { id: author.id, name: author.name } };
+            });
+          const categories = seedData.bookCategories
+            .filter((bc) => bc.bookId === book.id)
+            .map((bc) => {
+              const cat = seedData.categories.find((c) => c.id === bc.categoryId)!;
+              return { categoryId: cat.id, category: { id: cat.id, name: cat.name } };
+            });
+          const publisher = book.publisherId ? seedData.publishers.find((p) => p.id === book.publisherId) : null;
+          return { ...book, authors, categories, publisher: publisher ? { id: publisher.id, name: publisher.name } : null };
         });
+        allBooks.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         return NextResponse.json(allBooks);
       }
 
@@ -203,7 +203,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// ─── POST /api?action=createOrder|updateBook|updateInventory|loginAdmin ───
+// ─── POST /api?action=createOrder|updateBook|updateInventory|loginAdmin|createBook ───
 
 export async function POST(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -214,9 +214,7 @@ export async function POST(request: NextRequest) {
 
     switch (action) {
       case "createOrder": {
-        const orderNumber = `EH-${new Date().getFullYear()}-${String(
-          Math.floor(Math.random() * 9000) + 1000
-        ).padStart(4, "0")}`;
+        const orderNumber = `EH-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 9000) + 1000).padStart(4, "0")}`;
 
         const items = body.items as Array<{
           bookId: string;
@@ -226,196 +224,164 @@ export async function POST(request: NextRequest) {
           originType: string;
         }>;
 
-        const subtotal = items.reduce(
-          (sum: number, i: { price: number; quantity: number }) =>
-            sum + i.price * i.quantity,
-          0
-        );
+        const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
-        const result = await db.$transaction(async (tx) => {
-          const order = await tx.order.create({
-            data: {
-              orderNumber,
-              customerName: body.customerName,
-              customerEmail: body.customerEmail,
-              customerPhone: body.customerPhone,
-              customerAddress: body.customerAddress,
-              customerCity: body.customerCity,
-              warehouseId: body.warehouseId,
-              status: "PENDING",
-              source: "ONLINE",
-              subtotal,
-              discountAmount: 0,
-              shippingCost: 0,
-              totalAmount: subtotal,
-            },
-          });
+        const orderId = `ord_${Date.now()}`;
+        const order = {
+          id: orderId,
+          orderNumber,
+          customerName: body.customerName,
+          customerEmail: body.customerEmail,
+          customerPhone: body.customerPhone,
+          customerAddress: body.customerAddress,
+          customerCity: body.customerCity,
+          warehouseId: body.warehouseId,
+          status: "PENDING" as const,
+          source: "ONLINE" as const,
+          subtotal,
+          discountAmount: 0,
+          shippingCost: 0,
+          totalAmount: subtotal,
+          paymentMethod: null,
+          paymentRef: null,
+          notes: null,
+          confirmedAt: null,
+          shippedAt: null,
+          deliveredAt: null,
+          cancelledAt: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        state.orders.push(order as any);
 
-          for (const item of items) {
-            await tx.orderItem.create({
-              data: {
-                orderId: order.id,
-                bookId: item.bookId,
-                title: item.title,
-                unitPrice: item.price,
-                quantity: item.quantity,
-                subtotal: item.price * item.quantity,
-              },
-            });
-
-            const inv = await tx.inventory.findFirst({
-              where: {
-                bookId: item.bookId,
-                warehouseId: body.warehouseId,
-              },
-            });
-
-            if (!inv || inv.stockDisponible < item.quantity) {
-              throw new Error(
-                `Stock insuficiente para "${item.title}". Disponible: ${inv?.stockDisponible || 0}`
-              );
-            }
-
-            const newStock = inv.stockDisponible - item.quantity;
-            await tx.inventory.update({
-              where: { id: inv.id },
-              data: { stockDisponible: newStock },
-            });
-
-            await tx.inventoryAuditLog.create({
-              data: {
-                bookId: item.bookId,
-                warehouseId: body.warehouseId,
-                orderId: order.id,
-                movementType: "SALE",
-                quantityBefore: inv.stockDisponible,
-                quantityAfter: newStock,
-                quantityDelta: -item.quantity,
-                notes: `Venta online - Orden ${orderNumber}`,
-              },
-            });
+        for (const item of items) {
+          const inv = state.inventory.find(
+            (i) => i.bookId === item.bookId && i.warehouseId === body.warehouseId
+          );
+          if (!inv || inv.stockDisponible < item.quantity) {
+            return NextResponse.json(
+              { error: `Stock insuficiente para "${item.title}". Disponible: ${inv?.stockDisponible || 0}` },
+              { status: 400 }
+            );
           }
 
-          return order;
-        });
+          const newStock = inv.stockDisponible - item.quantity;
+          inv.stockDisponible = newStock;
 
-        return NextResponse.json({ success: true, orderNumber: result.orderNumber });
+          state.orderItems.push({
+            id: `oi_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+            orderId,
+            bookId: item.bookId,
+            title: item.title,
+            unitPrice: item.price,
+            quantity: item.quantity,
+            subtotal: item.price * item.quantity,
+            commissionRate: null,
+            commissionAmount: null,
+          } as any);
+
+          state.auditLog.push({
+            id: `audit_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+            bookId: item.bookId,
+            warehouseId: body.warehouseId,
+            orderId,
+            movementType: "SALE",
+            quantityBefore: inv.stockDisponible + item.quantity,
+            quantityAfter: newStock,
+            quantityDelta: -item.quantity,
+            performedById: null,
+            notes: `Venta online - Orden ${orderNumber}`,
+            createdAt: new Date().toISOString(),
+          } as any);
+        }
+
+        return NextResponse.json({ success: true, orderNumber });
       }
 
       case "updateBook": {
         const { id, ...data } = body;
-        const updateData: Record<string, unknown> = {};
-        if (data.title !== undefined) updateData.title = data.title;
-        if (data.price !== undefined) updateData.price = data.price;
-        if (data.costPrice !== undefined) updateData.costPrice = data.costPrice;
-        if (data.isActive !== undefined) updateData.isActive = data.isActive;
-        if (data.isFeatured !== undefined) updateData.isFeatured = data.isFeatured;
-        if (data.synopsis !== undefined) updateData.synopsis = data.synopsis;
-        if (data.pages !== undefined) updateData.pages = data.pages;
-        if (data.publicationYear !== undefined)
-          updateData.publicationYear = data.publicationYear;
-
-        const book = await db.book.update({
-          where: { id },
-          data: updateData,
-        });
+        const book = state.books.find((b) => b.id === id);
+        if (!book) return NextResponse.json({ error: "Book not found" }, { status: 404 });
+        if (data.title !== undefined) book.title = data.title;
+        if (data.price !== undefined) book.price = data.price;
+        if (data.costPrice !== undefined) book.costPrice = data.costPrice;
+        if (data.isActive !== undefined) book.isActive = data.isActive;
+        if (data.isFeatured !== undefined) book.isFeatured = data.isFeatured;
+        if (data.synopsis !== undefined) book.synopsis = data.synopsis;
+        if (data.pages !== undefined) book.pages = data.pages;
+        if (data.publicationYear !== undefined) book.publicationYear = data.publicationYear;
         return NextResponse.json(book);
       }
 
       case "updateInventory": {
         const { bookId, warehouseId, delta, movementType } = body;
-
-        const inv = await db.inventory.findFirst({
-          where: { bookId, warehouseId },
-        });
-
-        if (!inv) {
-          return NextResponse.json(
-            { error: "Registro de inventario no encontrado" },
-            { status: 404 }
-          );
-        }
-
+        const inv = state.inventory.find((i) => i.bookId === bookId && i.warehouseId === warehouseId);
+        if (!inv) return NextResponse.json({ error: "Registro de inventario no encontrado" }, { status: 404 });
         const newStock = inv.stockDisponible + delta;
-        if (newStock < 0) {
-          return NextResponse.json(
-            { error: "Stock no puede ser negativo" },
-            { status: 400 }
-          );
-        }
-
-        await db.$transaction([
-          db.inventory.update({
-            where: { id: inv.id },
-            data: { stockDisponible: newStock },
-          }),
-          db.inventoryAuditLog.create({
-            data: {
-              bookId,
-              warehouseId,
-              movementType,
-              quantityBefore: inv.stockDisponible,
-              quantityAfter: newStock,
-              quantityDelta: delta,
-              notes: `Ajuste manual (${movementType})`,
-            },
-          }),
-        ]);
-
+        if (newStock < 0) return NextResponse.json({ error: "Stock no puede ser negativo" }, { status: 400 });
+        inv.stockDisponible = newStock;
+        state.auditLog.push({
+          id: `audit_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+          bookId,
+          warehouseId,
+          orderId: null,
+          movementType,
+          quantityBefore: inv.stockDisponible - delta,
+          quantityAfter: newStock,
+          quantityDelta: delta,
+          performedById: null,
+          notes: `Ajuste manual (${movementType})`,
+          createdAt: new Date().toISOString(),
+        } as any);
         return NextResponse.json({ newStock });
       }
 
       case "loginAdmin": {
         const { password } = body;
-        if (password === "horizonte2026") {
-          return NextResponse.json({ success: true });
-        }
+        if (password === "horizonte2026") return NextResponse.json({ success: true });
         return NextResponse.json({ success: false }, { status: 401 });
       }
 
       case "createBook": {
         const slug = (body.title as string)
           .toLowerCase()
-          .replace(/[^a-z0-9áéíóúñü]+/g, '-')
-          .replace(/^-|-$/g, '');
+          .replace(/[^a-z0-9áéíóúñü]+/g, "-")
+          .replace(/^-|-$/g, "");
 
-        const book = await db.book.create({
-          data: {
-            title: body.title,
-            slug,
-            isbn: body.isbn || null,
-            synopsis: body.synopsis || null,
-            pages: body.pages || null,
-            language: body.language || 'Español',
-            publicationYear: body.publicationYear || null,
-            price: body.price,
-            costPrice: body.costPrice || null,
-            originType: body.originType,
-            publisherId: body.publisherId || null,
-          },
-        });
+        const newBook = {
+          id: `book_${Date.now()}`,
+          title: body.title,
+          slug,
+          isbn: body.isbn || null,
+          synopsis: body.synopsis || null,
+          pages: body.pages || null,
+          language: body.language || "Español",
+          publicationYear: body.publicationYear || null,
+          coverUrl: null,
+          price: body.price,
+          costPrice: body.costPrice || null,
+          weightKg: null,
+          isActive: true,
+          isFeatured: false,
+          originType: body.originType,
+          publisherId: body.publisherId || null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        state.books.push(newBook as any);
 
         if (body.authorIds?.length) {
-          await Promise.all(
-            (body.authorIds as string[]).map((aId: string, idx: number) =>
-              db.bookAuthor.create({
-                data: { bookId: book.id, authorId: aId, order: idx },
-              })
-            )
-          );
+          for (let idx = 0; idx < body.authorIds.length; idx++) {
+            seedData.bookAuthors.push({ bookId: newBook.id, authorId: body.authorIds[idx], order: idx });
+          }
         }
-
         if (body.categoryIds?.length) {
-          await Promise.all(
-            (body.categoryIds as string[]).map((cId: string) =>
-              db.bookCategory.create({
-                data: { bookId: book.id, categoryId: cId },
-              })
-            )
-          );
+          for (const catId of body.categoryIds) {
+            seedData.bookCategories.push({ bookId: newBook.id, categoryId: catId });
+          }
         }
 
-        return NextResponse.json(book);
+        return NextResponse.json(newBook);
       }
 
       default:

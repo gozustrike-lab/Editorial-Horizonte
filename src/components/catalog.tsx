@@ -241,17 +241,12 @@ export function CatalogSection() {
             : `${books.length} libro${books.length !== 1 ? 's' : ''} encontrado${books.length !== 1 ? 's' : ''}`}
         </p>
 
-        {/* Loading skeletons */}
+        {/* Loading skeletons — match new card heights */}
         {isLoading && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="rounded-lg border p-0 overflow-hidden">
-                <Skeleton className="h-56" />
-                <div className="space-y-2 p-4">
-                  <Skeleton className="h-5 w-3/4" />
-                  <Skeleton className="h-3 w-1/2" />
-                  <Skeleton className="h-6 w-1/3" />
-                </div>
+              <div key={i} className="h-[340px] sm:h-[400px] rounded-2xl overflow-hidden">
+                <Skeleton className="h-full w-full rounded-2xl" />
               </div>
             ))}
           </div>

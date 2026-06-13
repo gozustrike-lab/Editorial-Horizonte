@@ -1,10 +1,16 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowDown, BookOpen } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
-import { ShaderAnimation } from '@/components/ui/shader-animation';
+
+// Dynamic import for Three.js — client-only, no SSR
+const ShaderAnimation = dynamic(
+  () => import('@/components/ui/shader-animation').then((mod) => ({ default: mod.ShaderAnimation })),
+  { ssr: false, loading: () => <div className="absolute inset-0 bg-black" /> }
+);
 
 export function HeroSection() {
   const { setActiveSection } = useAppStore();
@@ -20,15 +26,13 @@ export function HeroSection() {
       id="inicio"
       className="relative flex min-h-[calc(100vh-4rem)] items-center justify-center overflow-hidden"
     >
-      {/* Shader animation background */}
+      {/* Shader animation background — loaded dynamically, no SSR */}
       <div className="absolute inset-0">
         <ShaderAnimation />
       </div>
 
       {/* Subtle dark overlay for text readability */}
       <div className="absolute inset-0 bg-black/30" />
-
-      {/* Radial glow accents */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.5)_100%)]" />
 
       {/* Content */}

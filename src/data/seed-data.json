@@ -1,0 +1,1767 @@
+{
+  "authors": [
+    {
+      "id": "cmqain2um0003pzpb3ev4kr0v",
+      "name": "Gabriel García Márquez",
+      "bio": "Novelista colombiano, premio Nobel de Literatura 1982. Padre del realismo mágico.",
+      "nationality": "Colombia",
+      "createdAt": "2026-06-12T05:58:42.478Z",
+      "updatedAt": "2026-06-12T05:58:42.478Z"
+    },
+    {
+      "id": "cmqain2um0005pzpbwzy27uav",
+      "name": "Isabel Allende",
+      "bio": "Escritora chilena, una de las voces más leídas de la literatura latinoamericana contemporánea.",
+      "nationality": "Chile",
+      "createdAt": "2026-06-12T05:58:42.479Z",
+      "updatedAt": "2026-06-12T05:58:42.479Z"
+    },
+    {
+      "id": "cmqain2um0006pzpbkwq4e3iy",
+      "name": "Pablo Neruda",
+      "bio": "Poeta chileno, premio Nobel de Literatura 1971. Su poesía abarca desde lo íntimo hasta lo político.",
+      "nationality": "Chile",
+      "createdAt": "2026-06-12T05:58:42.479Z",
+      "updatedAt": "2026-06-12T05:58:42.479Z"
+    },
+    {
+      "id": "cmqain2um0007pzpb3xggcsal",
+      "name": "Julio Cortázar",
+      "bio": "Escritor argentino, maestro del cuento fantástico y la novela experimental. Autor de Rayuela.",
+      "nationality": "Argentina",
+      "createdAt": "2026-06-12T05:58:42.479Z",
+      "updatedAt": "2026-06-12T05:58:42.479Z"
+    },
+    {
+      "id": "cmqain2um0004pzpbpw0p6khf",
+      "name": "Jorge Luis Borges",
+      "bio": "Escritor argentino, uno de los autores más influyentes del siglo XX. Maestro del cuento y la poesía.",
+      "nationality": "Argentina",
+      "createdAt": "2026-06-12T05:58:42.478Z",
+      "updatedAt": "2026-06-12T05:58:42.478Z"
+    }
+  ],
+  "categories": [
+    {
+      "id": "cmqain2uo0008pzpbpsddlemv",
+      "name": "Narrativa",
+      "slug": "narrativa",
+      "description": "Novelas, cuentos y relatos",
+      "createdAt": "2026-06-12T05:58:42.480Z",
+      "updatedAt": "2026-06-12T05:58:42.480Z"
+    },
+    {
+      "id": "cmqain2uo000bpzpbnuzc55bv",
+      "name": "Historia",
+      "slug": "historia",
+      "description": "Historia de América Latina y el mundo",
+      "createdAt": "2026-06-12T05:58:42.480Z",
+      "updatedAt": "2026-06-12T05:58:42.480Z"
+    },
+    {
+      "id": "cmqain2uo0009pzpbpt9d00jx",
+      "name": "Poesía",
+      "slug": "poesia",
+      "description": "Poesía latinoamericana y universal",
+      "createdAt": "2026-06-12T05:58:42.480Z",
+      "updatedAt": "2026-06-12T05:58:42.480Z"
+    },
+    {
+      "id": "cmqain2uo000apzpb44skkng6",
+      "name": "Ensayo",
+      "slug": "ensayo",
+      "description": "Ensayos, crítica y reflexión",
+      "createdAt": "2026-06-12T05:58:42.480Z",
+      "updatedAt": "2026-06-12T05:58:42.480Z"
+    }
+  ],
+  "publishers": [
+    {
+      "id": "cmqain2us000cpzpbv2hp4zmr",
+      "name": "Penguin Random House",
+      "country": "Estados Unidos",
+      "contactEmail": "dist@penguinrandomhouse.com",
+      "contactPhone": null,
+      "commissionRate": 0.15,
+      "notes": null,
+      "isActive": true,
+      "createdAt": "2026-06-12T05:58:42.484Z",
+      "updatedAt": "2026-06-12T05:58:42.484Z"
+    },
+    {
+      "id": "cmqain2us000dpzpbw99n97lz",
+      "name": "Alfaguara",
+      "country": "España",
+      "contactEmail": "ventas@alfaguara.com",
+      "contactPhone": null,
+      "commissionRate": 0.12,
+      "notes": null,
+      "isActive": true,
+      "createdAt": "2026-06-12T05:58:42.484Z",
+      "updatedAt": "2026-06-12T05:58:42.484Z"
+    }
+  ],
+  "warehouses": [
+    {
+      "id": "cmqain2uu000epzpbvd0ooyfk",
+      "name": "Almacén Central",
+      "slug": "almacen-central",
+      "address": "Av. Corrientes 1234, Buenos Aires",
+      "city": "Buenos Aires",
+      "phone": "+54 11 4567-8901",
+      "contactName": "Roberto Sánchez",
+      "warehouseType": "PHYSICAL",
+      "isActive": true,
+      "createdAt": "2026-06-12T05:58:42.486Z",
+      "updatedAt": "2026-06-12T05:58:42.486Z"
+    },
+    {
+      "id": "cmqain2uu000hpzpbrzjw39rg",
+      "name": "Tienda Online",
+      "slug": "tienda-online",
+      "address": "Virtual",
+      "city": "Buenos Aires",
+      "phone": "+54 11 5555-0000",
+      "contactName": "Soporte Web",
+      "warehouseType": "VIRTUAL",
+      "isActive": true,
+      "createdAt": "2026-06-12T05:58:42.486Z",
+      "updatedAt": "2026-06-12T05:58:42.486Z"
+    },
+    {
+      "id": "cmqain2uu000fpzpbzrawmymr",
+      "name": "Librería SUR",
+      "slug": "libreria-sur",
+      "address": "Calle 10 #5-32, Bogotá",
+      "city": "Bogotá",
+      "phone": "+57 1 234-5678",
+      "contactName": "Ana Martínez",
+      "warehouseType": "PHYSICAL",
+      "isActive": true,
+      "createdAt": "2026-06-12T05:58:42.486Z",
+      "updatedAt": "2026-06-12T05:58:42.486Z"
+    },
+    {
+      "id": "cmqain2uu000gpzpbpjdjicy6",
+      "name": "El Virrey",
+      "slug": "el-virrey",
+      "address": "Av. Paseo de la Reforma 250, CDMX",
+      "city": "Ciudad de México",
+      "phone": "+52 55 1234-5678",
+      "contactName": "Luis Hernández",
+      "warehouseType": "PHYSICAL",
+      "isActive": true,
+      "createdAt": "2026-06-12T05:58:42.486Z",
+      "updatedAt": "2026-06-12T05:58:42.486Z"
+    }
+  ],
+  "bookAuthors": [
+    {
+      "bookId": "cmqain2v4000jpzpb40x8blle",
+      "authorId": "cmqain2um0004pzpbpw0p6khf",
+      "order": 0
+    },
+    {
+      "bookId": "cmqain2v6000lpzpbqcdcf2m8",
+      "authorId": "cmqain2um0003pzpb3ev4kr0v",
+      "order": 0
+    },
+    {
+      "bookId": "cmqain2v7000npzpbnxmf2okt",
+      "authorId": "cmqain2um0005pzpbwzy27uav",
+      "order": 0
+    },
+    {
+      "bookId": "cmqain2v8000ppzpbxv8ksxao",
+      "authorId": "cmqain2um0006pzpbkwq4e3iy",
+      "order": 0
+    },
+    {
+      "bookId": "cmqain2v9000rpzpbqpjwdgdp",
+      "authorId": "cmqain2um0007pzpb3xggcsal",
+      "order": 0
+    },
+    {
+      "bookId": "cmqain2vb000tpzpbow0fva0x",
+      "authorId": "cmqain2um0004pzpbpw0p6khf",
+      "order": 0
+    },
+    {
+      "bookId": "cmqain2vc000vpzpbsr96m4ic",
+      "authorId": "cmqain2um0006pzpbkwq4e3iy",
+      "order": 0
+    },
+    {
+      "bookId": "cmqain2ve000xpzpbep96naye",
+      "authorId": "cmqain2um0007pzpb3xggcsal",
+      "order": 0
+    },
+    {
+      "bookId": "cmqain2vf000zpzpbxhh3mc1p",
+      "authorId": "cmqain2um0003pzpb3ev4kr0v",
+      "order": 0
+    },
+    {
+      "bookId": "cmqain2vg0011pzpb8bl3kmto",
+      "authorId": "cmqain2um0005pzpbwzy27uav",
+      "order": 0
+    },
+    {
+      "bookId": "cmqain2vh0013pzpb0ftp9xsc",
+      "authorId": "cmqain2um0003pzpb3ev4kr0v",
+      "order": 0
+    },
+    {
+      "bookId": "cmqain2vj0015pzpb0z5tsnaw",
+      "authorId": "cmqain2um0003pzpb3ev4kr0v",
+      "order": 0
+    },
+    {
+      "bookId": "cmqain2vk0017pzpb67gwo15w",
+      "authorId": "cmqain2um0007pzpb3xggcsal",
+      "order": 0
+    },
+    {
+      "bookId": "cmqain2vl0019pzpbsyku8rdf",
+      "authorId": "cmqain2um0004pzpbpw0p6khf",
+      "order": 0
+    },
+    {
+      "bookId": "cmqain2vm001bpzpbgmd70vf8",
+      "authorId": "cmqain2um0003pzpb3ev4kr0v",
+      "order": 0
+    }
+  ],
+  "bookCategories": [
+    {
+      "bookId": "cmqain2v4000jpzpb40x8blle",
+      "categoryId": "cmqain2uo0008pzpbpsddlemv"
+    },
+    {
+      "bookId": "cmqain2v6000lpzpbqcdcf2m8",
+      "categoryId": "cmqain2uo0008pzpbpsddlemv"
+    },
+    {
+      "bookId": "cmqain2v7000npzpbnxmf2okt",
+      "categoryId": "cmqain2uo0008pzpbpsddlemv"
+    },
+    {
+      "bookId": "cmqain2v8000ppzpbxv8ksxao",
+      "categoryId": "cmqain2uo0009pzpbpt9d00jx"
+    },
+    {
+      "bookId": "cmqain2v9000rpzpbqpjwdgdp",
+      "categoryId": "cmqain2uo0008pzpbpsddlemv"
+    },
+    {
+      "bookId": "cmqain2vb000tpzpbow0fva0x",
+      "categoryId": "cmqain2uo0008pzpbpsddlemv"
+    },
+    {
+      "bookId": "cmqain2vb000tpzpbow0fva0x",
+      "categoryId": "cmqain2uo000apzpb44skkng6"
+    },
+    {
+      "bookId": "cmqain2vc000vpzpbsr96m4ic",
+      "categoryId": "cmqain2uo0009pzpbpt9d00jx"
+    },
+    {
+      "bookId": "cmqain2vc000vpzpbsr96m4ic",
+      "categoryId": "cmqain2uo000bpzpbnuzc55bv"
+    },
+    {
+      "bookId": "cmqain2ve000xpzpbep96naye",
+      "categoryId": "cmqain2uo0008pzpbpsddlemv"
+    },
+    {
+      "bookId": "cmqain2vf000zpzpbxhh3mc1p",
+      "categoryId": "cmqain2uo000apzpb44skkng6"
+    },
+    {
+      "bookId": "cmqain2vg0011pzpb8bl3kmto",
+      "categoryId": "cmqain2uo0008pzpbpsddlemv"
+    },
+    {
+      "bookId": "cmqain2vh0013pzpb0ftp9xsc",
+      "categoryId": "cmqain2uo0008pzpbpsddlemv"
+    },
+    {
+      "bookId": "cmqain2vj0015pzpb0z5tsnaw",
+      "categoryId": "cmqain2uo0008pzpbpsddlemv"
+    },
+    {
+      "bookId": "cmqain2vk0017pzpb67gwo15w",
+      "categoryId": "cmqain2uo0008pzpbpsddlemv"
+    },
+    {
+      "bookId": "cmqain2vl0019pzpbsyku8rdf",
+      "categoryId": "cmqain2uo0008pzpbpsddlemv"
+    },
+    {
+      "bookId": "cmqain2vm001bpzpbgmd70vf8",
+      "categoryId": "cmqain2uo0008pzpbpsddlemv"
+    }
+  ],
+  "books": [
+    {
+      "id": "cmqain2v4000jpzpb40x8blle",
+      "title": "El Aleph",
+      "slug": "el-aleph",
+      "isbn": "978-987-01-0001-1",
+      "synopsis": "Una colección de cuentos que exploran los laberintos del tiempo, el infinito y la identidad. Borges nos sumerge en mundos donde la realidad y la ficción se confunden.",
+      "pages": 146,
+      "language": "Español",
+      "publicationYear": 2019,
+      "coverUrl": null,
+      "price": 8900,
+      "costPrice": 3200,
+      "weightKg": 0.25,
+      "isActive": true,
+      "isFeatured": true,
+      "originType": "PROPIO",
+      "publisherId": null,
+      "createdAt": "2026-06-12T05:58:42.496Z",
+      "updatedAt": "2026-06-12T05:58:42.496Z"
+    },
+    {
+      "id": "cmqain2v6000lpzpbqcdcf2m8",
+      "title": "Cien años de soledad",
+      "slug": "cien-anos-de-soledad",
+      "isbn": "978-987-01-0002-8",
+      "synopsis": "La saga de la familia Buendía en el pueblo ficticio de Macondo. Una obra maestra del realismo mágico que narra siete generaciones de amor, guerra y destino.",
+      "pages": 471,
+      "language": "Español",
+      "publicationYear": 2020,
+      "coverUrl": null,
+      "price": 12500,
+      "costPrice": 4500,
+      "weightKg": 0.45,
+      "isActive": true,
+      "isFeatured": true,
+      "originType": "PROPIO",
+      "publisherId": null,
+      "createdAt": "2026-06-12T05:58:42.498Z",
+      "updatedAt": "2026-06-12T05:58:42.498Z"
+    },
+    {
+      "id": "cmqain2v7000npzpbnxmf2okt",
+      "title": "La casa de los espíritus",
+      "slug": "la-casa-de-los-espiritus",
+      "isbn": "978-987-01-0003-5",
+      "synopsis": "La historia de la familia Trueba a lo largo de cuatro generaciones, entrelazada con los acontecimientos políticos y sociales de Chile.",
+      "pages": 433,
+      "language": "Español",
+      "publicationYear": 2021,
+      "coverUrl": null,
+      "price": 11800,
+      "costPrice": 4200,
+      "weightKg": 0.42,
+      "isActive": true,
+      "isFeatured": false,
+      "originType": "PROPIO",
+      "publisherId": null,
+      "createdAt": "2026-06-12T05:58:42.499Z",
+      "updatedAt": "2026-06-12T05:58:42.499Z"
+    },
+    {
+      "id": "cmqain2v8000ppzpbxv8ksxao",
+      "title": "Veinte poemas de amor y una canción desesperada",
+      "slug": "veinte-poemas-de-amor",
+      "isbn": "978-987-01-0004-2",
+      "synopsis": "La obra más célebre de Pablo Neruda, una colección de poemas que captura la pasión, el deseo y la melancolía del amor juvenil.",
+      "pages": 64,
+      "language": "Español",
+      "publicationYear": 2022,
+      "coverUrl": null,
+      "price": 6500,
+      "costPrice": 2100,
+      "weightKg": 0.15,
+      "isActive": true,
+      "isFeatured": true,
+      "originType": "PROPIO",
+      "publisherId": null,
+      "createdAt": "2026-06-12T05:58:42.500Z",
+      "updatedAt": "2026-06-12T05:58:42.500Z"
+    },
+    {
+      "id": "cmqain2v9000rpzpbqpjwdgdp",
+      "title": "Rayuela",
+      "slug": "rayuela",
+      "isbn": "978-987-01-0005-9",
+      "synopsis": "Una novela revolucionaria que puede leerse de múltiples maneras. La historia de Horacio Oliveira entre París y Buenos Aires en una búsqueda existencial.",
+      "pages": 600,
+      "language": "Español",
+      "publicationYear": 2020,
+      "coverUrl": null,
+      "price": 13200,
+      "costPrice": 5000,
+      "weightKg": 0.55,
+      "isActive": true,
+      "isFeatured": true,
+      "originType": "PROPIO",
+      "publisherId": null,
+      "createdAt": "2026-06-12T05:58:42.502Z",
+      "updatedAt": "2026-06-12T05:58:42.502Z"
+    },
+    {
+      "id": "cmqain2vb000tpzpbow0fva0x",
+      "title": "Ficciones",
+      "slug": "ficciones",
+      "isbn": "978-987-01-0006-6",
+      "synopsis": "Colección de cuentos donde Borges explora las paradojas de la literatura, la filosofía y el tiempo. Incluye clásicos como \"Tlön, Uqbar, Orbis Tertius\".",
+      "pages": 174,
+      "language": "Español",
+      "publicationYear": 2021,
+      "coverUrl": null,
+      "price": 9200,
+      "costPrice": 3400,
+      "weightKg": 0.28,
+      "isActive": true,
+      "isFeatured": false,
+      "originType": "PROPIO",
+      "publisherId": null,
+      "createdAt": "2026-06-12T05:58:42.503Z",
+      "updatedAt": "2026-06-12T05:58:42.503Z"
+    },
+    {
+      "id": "cmqain2vc000vpzpbsr96m4ic",
+      "title": "Canto General",
+      "slug": "canto-general",
+      "isbn": "978-987-01-0007-3",
+      "synopsis": "Poema épico de Pablo Neruda que recorre la historia de América Latina. Una obra monumental de la poesía política y social.",
+      "pages": 384,
+      "language": "Español",
+      "publicationYear": 2022,
+      "coverUrl": null,
+      "price": 10800,
+      "costPrice": 3900,
+      "weightKg": 0.4,
+      "isActive": true,
+      "isFeatured": false,
+      "originType": "PROPIO",
+      "publisherId": null,
+      "createdAt": "2026-06-12T05:58:42.505Z",
+      "updatedAt": "2026-06-12T05:58:42.505Z"
+    },
+    {
+      "id": "cmqain2ve000xpzpbep96naye",
+      "title": "Bestiario",
+      "slug": "bestiario",
+      "isbn": "978-987-01-0008-0",
+      "synopsis": "La primera colección de cuentos de Cortázar, donde lo cotidiano se transforma en algo inquietante y fantástico.",
+      "pages": 148,
+      "language": "Español",
+      "publicationYear": 2023,
+      "coverUrl": null,
+      "price": 7800,
+      "costPrice": 2800,
+      "weightKg": 0.22,
+      "isActive": true,
+      "isFeatured": false,
+      "originType": "PROPIO",
+      "publisherId": null,
+      "createdAt": "2026-06-12T05:58:42.506Z",
+      "updatedAt": "2026-06-12T05:58:42.506Z"
+    },
+    {
+      "id": "cmqain2vf000zpzpbxhh3mc1p",
+      "title": "El libro de los abrazos",
+      "slug": "el-libro-de-los-abrazos",
+      "isbn": "978-987-01-0009-7",
+      "synopsis": "Una obra híbrida de Galeano que mezcla relatos cortos, reflexiones y textos poéticos sobre América Latina.",
+      "pages": 256,
+      "language": "Español",
+      "publicationYear": 2023,
+      "coverUrl": null,
+      "price": 8500,
+      "costPrice": 3100,
+      "weightKg": 0.32,
+      "isActive": true,
+      "isFeatured": false,
+      "originType": "PROPIO",
+      "publisherId": null,
+      "createdAt": "2026-06-12T05:58:42.507Z",
+      "updatedAt": "2026-06-12T05:58:42.507Z"
+    },
+    {
+      "id": "cmqain2vg0011pzpb8bl3kmto",
+      "title": "Eva Luna",
+      "slug": "eva-luna",
+      "isbn": "978-987-01-0010-3",
+      "synopsis": "La historia de Eva Luna, una narradora nata que teje historias de amor, aventura y supervivencia en un país latinoamericano.",
+      "pages": 302,
+      "language": "Español",
+      "publicationYear": 2024,
+      "coverUrl": null,
+      "price": 10200,
+      "costPrice": 3700,
+      "weightKg": 0.35,
+      "isActive": true,
+      "isFeatured": true,
+      "originType": "PROPIO",
+      "publisherId": null,
+      "createdAt": "2026-06-12T05:58:42.508Z",
+      "updatedAt": "2026-06-12T05:58:42.508Z"
+    },
+    {
+      "id": "cmqain2vh0013pzpb0ftp9xsc",
+      "title": "Crónica de una muerte anunciada",
+      "slug": "cronica-de-una-muerte-anunciada",
+      "isbn": "978-84-376-0494-7",
+      "synopsis": "Un periodista regresa al pueblo donde ocurrió un crimen anunciado. García Márquez reconstruye la historia con maestría periodística y literaria.",
+      "pages": 120,
+      "language": "Español",
+      "publicationYear": 2021,
+      "coverUrl": null,
+      "price": 7500,
+      "costPrice": 5200,
+      "weightKg": 0.2,
+      "isActive": true,
+      "isFeatured": false,
+      "originType": "TERCERO",
+      "publisherId": "cmqain2us000dpzpbw99n97lz",
+      "createdAt": "2026-06-12T05:58:42.510Z",
+      "updatedAt": "2026-06-12T05:58:42.510Z"
+    },
+    {
+      "id": "cmqain2vj0015pzpb0z5tsnaw",
+      "title": "El amor en los tiempos del cólera",
+      "slug": "el-amor-en-los-tiempos-del-colera",
+      "isbn": "978-84-397-1182-6",
+      "synopsis": "Una historia de amor que dura más de medio siglo. Florentino Ariza espera cincuenta años para reconquistar a Fermina Daza.",
+      "pages": 368,
+      "language": "Español",
+      "publicationYear": 2022,
+      "coverUrl": null,
+      "price": 11900,
+      "costPrice": 8500,
+      "weightKg": 0.4,
+      "isActive": true,
+      "isFeatured": true,
+      "originType": "TERCERO",
+      "publisherId": "cmqain2us000dpzpbw99n97lz",
+      "createdAt": "2026-06-12T05:58:42.511Z",
+      "updatedAt": "2026-06-12T05:58:42.511Z"
+    },
+    {
+      "id": "cmqain2vk0017pzpb67gwo15w",
+      "title": "Los detective salvajes",
+      "slug": "los-detectives-salvajes",
+      "isbn": "978-0-14-028329-0",
+      "synopsis": "La búsqueda de una poeta desaparecida lleva a un grupo de jóvenes poetas por México y el mundo. Obra cumbre de Roberto Bolaño.",
+      "pages": 598,
+      "language": "Español",
+      "publicationYear": 2023,
+      "coverUrl": null,
+      "price": 14500,
+      "costPrice": 10200,
+      "weightKg": 0.58,
+      "isActive": true,
+      "isFeatured": false,
+      "originType": "TERCERO",
+      "publisherId": "cmqain2us000cpzpbv2hp4zmr",
+      "createdAt": "2026-06-12T05:58:42.512Z",
+      "updatedAt": "2026-06-12T05:58:42.512Z"
+    },
+    {
+      "id": "cmqain2vl0019pzpbsyku8rdf",
+      "title": "La sombra del viento",
+      "slug": "la-sombra-del-viento",
+      "isbn": "978-84-08-04317-4",
+      "synopsis": "En la Barcelona de posguerra, un joven descubre un libro maldito que cambiará su vida. Una novela sobre el poder de la literatura.",
+      "pages": 576,
+      "language": "Español",
+      "publicationYear": 2022,
+      "coverUrl": null,
+      "price": 13500,
+      "costPrice": 9800,
+      "weightKg": 0.52,
+      "isActive": true,
+      "isFeatured": true,
+      "originType": "TERCERO",
+      "publisherId": "cmqain2us000cpzpbv2hp4zmr",
+      "createdAt": "2026-06-12T05:58:42.513Z",
+      "updatedAt": "2026-06-12T05:58:42.513Z"
+    },
+    {
+      "id": "cmqain2vm001bpzpbgmd70vf8",
+      "title": "Pedro Páramo",
+      "slug": "pedro-paramo",
+      "isbn": "978-607-07-0100-5",
+      "synopsis": "Juan Rulfo viaja a Comala en busca de su padre y encuentra un pueblo de fantasmas. Una obra fundamental de la literatura mexicana.",
+      "pages": 124,
+      "language": "Español",
+      "publicationYear": 2023,
+      "coverUrl": null,
+      "price": 6900,
+      "costPrice": 4800,
+      "weightKg": 0.18,
+      "isActive": true,
+      "isFeatured": false,
+      "originType": "TERCERO",
+      "publisherId": "cmqain2us000dpzpbw99n97lz",
+      "createdAt": "2026-06-12T05:58:42.515Z",
+      "updatedAt": "2026-06-12T05:58:42.515Z"
+    }
+  ],
+  "inventory": [
+    {
+      "id": "cmqain2vo001dpzpbeikdfx2e",
+      "bookId": "cmqain2v4000jpzpb40x8blle",
+      "warehouseId": "cmqain2uu000epzpbvd0ooyfk",
+      "stockDisponible": 32,
+      "stockConsignado": 13,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.516Z",
+      "createdAt": "2026-06-12T05:58:42.516Z"
+    },
+    {
+      "id": "cmqain2vo001fpzpbs8f95s0o",
+      "bookId": "cmqain2v4000jpzpb40x8blle",
+      "warehouseId": "cmqain2uu000fpzpbzrawmymr",
+      "stockDisponible": 14,
+      "stockConsignado": 6,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.517Z",
+      "createdAt": "2026-06-12T05:58:42.517Z"
+    },
+    {
+      "id": "cmqain2vp001hpzpbwinf7qto",
+      "bookId": "cmqain2v4000jpzpb40x8blle",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "stockDisponible": 11,
+      "stockConsignado": 4,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.517Z",
+      "createdAt": "2026-06-12T05:58:42.517Z"
+    },
+    {
+      "id": "cmqain2vp001jpzpbzf2gltxt",
+      "bookId": "cmqain2v4000jpzpb40x8blle",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "stockDisponible": 21,
+      "stockConsignado": 9,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.518Z",
+      "createdAt": "2026-06-12T05:58:42.518Z"
+    },
+    {
+      "id": "cmqain2vq001lpzpb39dr88z9",
+      "bookId": "cmqain2v6000lpzpbqcdcf2m8",
+      "warehouseId": "cmqain2uu000epzpbvd0ooyfk",
+      "stockDisponible": 42,
+      "stockConsignado": 18,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.518Z",
+      "createdAt": "2026-06-12T05:58:42.518Z"
+    },
+    {
+      "id": "cmqain2vq001npzpb9yx59io8",
+      "bookId": "cmqain2v6000lpzpbqcdcf2m8",
+      "warehouseId": "cmqain2uu000fpzpbzrawmymr",
+      "stockDisponible": 18,
+      "stockConsignado": 7,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.518Z",
+      "createdAt": "2026-06-12T05:58:42.518Z"
+    },
+    {
+      "id": "cmqain2vq001ppzpb1e9p5vzt",
+      "bookId": "cmqain2v6000lpzpbqcdcf2m8",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "stockDisponible": 14,
+      "stockConsignado": 6,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.519Z",
+      "createdAt": "2026-06-12T05:58:42.519Z"
+    },
+    {
+      "id": "cmqain2vr001rpzpb5ok78n2b",
+      "bookId": "cmqain2v6000lpzpbqcdcf2m8",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "stockDisponible": 28,
+      "stockConsignado": 12,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.519Z",
+      "createdAt": "2026-06-12T05:58:42.519Z"
+    },
+    {
+      "id": "cmqain2vs001tpzpb7bqmm1cj",
+      "bookId": "cmqain2v7000npzpbnxmf2okt",
+      "warehouseId": "cmqain2uu000epzpbvd0ooyfk",
+      "stockDisponible": 25,
+      "stockConsignado": 10,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.520Z",
+      "createdAt": "2026-06-12T05:58:42.520Z"
+    },
+    {
+      "id": "cmqain2vs001vpzpbnyuxqzhb",
+      "bookId": "cmqain2v7000npzpbnxmf2okt",
+      "warehouseId": "cmqain2uu000fpzpbzrawmymr",
+      "stockDisponible": 13,
+      "stockConsignado": 5,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.520Z",
+      "createdAt": "2026-06-12T05:58:42.520Z"
+    },
+    {
+      "id": "cmqain2vs001xpzpbaijj7pfk",
+      "bookId": "cmqain2v7000npzpbnxmf2okt",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "stockDisponible": 9,
+      "stockConsignado": 3,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.521Z",
+      "createdAt": "2026-06-12T05:58:42.521Z"
+    },
+    {
+      "id": "cmqain2vt001zpzpb5cv4wa7y",
+      "bookId": "cmqain2v7000npzpbnxmf2okt",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "stockDisponible": 18,
+      "stockConsignado": 7,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.521Z",
+      "createdAt": "2026-06-12T05:58:42.521Z"
+    },
+    {
+      "id": "cmqain2vt0021pzpbpthvr9nu",
+      "bookId": "cmqain2v8000ppzpbxv8ksxao",
+      "warehouseId": "cmqain2uu000epzpbvd0ooyfk",
+      "stockDisponible": 35,
+      "stockConsignado": 15,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.522Z",
+      "createdAt": "2026-06-12T05:58:42.522Z"
+    },
+    {
+      "id": "cmqain2vu0023pzpbohajva7x",
+      "bookId": "cmqain2v8000ppzpbxv8ksxao",
+      "warehouseId": "cmqain2uu000fpzpbzrawmymr",
+      "stockDisponible": 21,
+      "stockConsignado": 9,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.522Z",
+      "createdAt": "2026-06-12T05:58:42.522Z"
+    },
+    {
+      "id": "cmqain2vu0025pzpbcswrgm0o",
+      "bookId": "cmqain2v8000ppzpbxv8ksxao",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "stockDisponible": 16,
+      "stockConsignado": 6,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.523Z",
+      "createdAt": "2026-06-12T05:58:42.523Z"
+    },
+    {
+      "id": "cmqain2vv0027pzpbjizv5zyc",
+      "bookId": "cmqain2v8000ppzpbxv8ksxao",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "stockDisponible": 25,
+      "stockConsignado": 10,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.523Z",
+      "createdAt": "2026-06-12T05:58:42.523Z"
+    },
+    {
+      "id": "cmqain2vv0029pzpb7vrcm096",
+      "bookId": "cmqain2v9000rpzpbqpjwdgdp",
+      "warehouseId": "cmqain2uu000epzpbvd0ooyfk",
+      "stockDisponible": 18,
+      "stockConsignado": 7,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.524Z",
+      "createdAt": "2026-06-12T05:58:42.524Z"
+    },
+    {
+      "id": "cmqain2vv002bpzpb0hhmuvpq",
+      "bookId": "cmqain2v9000rpzpbqpjwdgdp",
+      "warehouseId": "cmqain2uu000fpzpbzrawmymr",
+      "stockDisponible": 7,
+      "stockConsignado": 3,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.524Z",
+      "createdAt": "2026-06-12T05:58:42.524Z"
+    },
+    {
+      "id": "cmqain2vw002dpzpb2mvciw93",
+      "bookId": "cmqain2v9000rpzpbqpjwdgdp",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "stockDisponible": 6,
+      "stockConsignado": 2,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.524Z",
+      "createdAt": "2026-06-12T05:58:42.524Z"
+    },
+    {
+      "id": "cmqain2vw002fpzpb3cxy7smn",
+      "bookId": "cmqain2v9000rpzpbqpjwdgdp",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "stockDisponible": 11,
+      "stockConsignado": 4,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.525Z",
+      "createdAt": "2026-06-12T05:58:42.525Z"
+    },
+    {
+      "id": "cmqain2vx002hpzpbsmrcz5e5",
+      "bookId": "cmqain2vb000tpzpbow0fva0x",
+      "warehouseId": "cmqain2uu000epzpbvd0ooyfk",
+      "stockDisponible": 28,
+      "stockConsignado": 12,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.525Z",
+      "createdAt": "2026-06-12T05:58:42.525Z"
+    },
+    {
+      "id": "cmqain2vx002jpzpb0yvl33xq",
+      "bookId": "cmqain2vb000tpzpbow0fva0x",
+      "warehouseId": "cmqain2uu000fpzpbzrawmymr",
+      "stockDisponible": 11,
+      "stockConsignado": 4,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.526Z",
+      "createdAt": "2026-06-12T05:58:42.526Z"
+    },
+    {
+      "id": "cmqain2vy002lpzpb13bmd7g8",
+      "bookId": "cmqain2vb000tpzpbow0fva0x",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "stockDisponible": 7,
+      "stockConsignado": 3,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.526Z",
+      "createdAt": "2026-06-12T05:58:42.526Z"
+    },
+    {
+      "id": "cmqain2vy002npzpb3ohz4px3",
+      "bookId": "cmqain2vb000tpzpbow0fva0x",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "stockDisponible": 14,
+      "stockConsignado": 6,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.526Z",
+      "createdAt": "2026-06-12T05:58:42.526Z"
+    },
+    {
+      "id": "cmqain2vy002ppzpbwzo3a8zl",
+      "bookId": "cmqain2vc000vpzpbsr96m4ic",
+      "warehouseId": "cmqain2uu000epzpbvd0ooyfk",
+      "stockDisponible": 14,
+      "stockConsignado": 6,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.527Z",
+      "createdAt": "2026-06-12T05:58:42.527Z"
+    },
+    {
+      "id": "cmqain2vz002rpzpb230blgp8",
+      "bookId": "cmqain2vc000vpzpbsr96m4ic",
+      "warehouseId": "cmqain2uu000fpzpbzrawmymr",
+      "stockDisponible": 6,
+      "stockConsignado": 2,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.527Z",
+      "createdAt": "2026-06-12T05:58:42.527Z"
+    },
+    {
+      "id": "cmqain2vz002tpzpb9t1xlwh3",
+      "bookId": "cmqain2vc000vpzpbsr96m4ic",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "stockDisponible": 4,
+      "stockConsignado": 1,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.528Z",
+      "createdAt": "2026-06-12T05:58:42.528Z"
+    },
+    {
+      "id": "cmqain2w0002vpzpbgesrx83k",
+      "bookId": "cmqain2vc000vpzpbsr96m4ic",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "stockDisponible": 9,
+      "stockConsignado": 3,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.528Z",
+      "createdAt": "2026-06-12T05:58:42.528Z"
+    },
+    {
+      "id": "cmqain2w0002xpzpbhwy7vmt9",
+      "bookId": "cmqain2ve000xpzpbep96naye",
+      "warehouseId": "cmqain2uu000epzpbvd0ooyfk",
+      "stockDisponible": 21,
+      "stockConsignado": 9,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.529Z",
+      "createdAt": "2026-06-12T05:58:42.529Z"
+    },
+    {
+      "id": "cmqain2w1002zpzpb94po0oxq",
+      "bookId": "cmqain2ve000xpzpbep96naye",
+      "warehouseId": "cmqain2uu000fpzpbzrawmymr",
+      "stockDisponible": 9,
+      "stockConsignado": 3,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.529Z",
+      "createdAt": "2026-06-12T05:58:42.529Z"
+    },
+    {
+      "id": "cmqain2w10031pzpbg9anbj1g",
+      "bookId": "cmqain2ve000xpzpbep96naye",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "stockDisponible": 7,
+      "stockConsignado": 3,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.529Z",
+      "createdAt": "2026-06-12T05:58:42.529Z"
+    },
+    {
+      "id": "cmqain2w10033pzpbecksw0nc",
+      "bookId": "cmqain2ve000xpzpbep96naye",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "stockDisponible": 13,
+      "stockConsignado": 5,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.530Z",
+      "createdAt": "2026-06-12T05:58:42.530Z"
+    },
+    {
+      "id": "cmqain2w20035pzpb6zksjm5x",
+      "bookId": "cmqain2vf000zpzpbxhh3mc1p",
+      "warehouseId": "cmqain2uu000epzpbvd0ooyfk",
+      "stockDisponible": 20,
+      "stockConsignado": 8,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.530Z",
+      "createdAt": "2026-06-12T05:58:42.530Z"
+    },
+    {
+      "id": "cmqain2w20037pzpb7lzh2zw5",
+      "bookId": "cmqain2vf000zpzpbxhh3mc1p",
+      "warehouseId": "cmqain2uu000fpzpbzrawmymr",
+      "stockDisponible": 10,
+      "stockConsignado": 4,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.530Z",
+      "createdAt": "2026-06-12T05:58:42.530Z"
+    },
+    {
+      "id": "cmqain2w20039pzpb2dxc2tpd",
+      "bookId": "cmqain2vf000zpzpbxhh3mc1p",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "stockDisponible": 6,
+      "stockConsignado": 2,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.531Z",
+      "createdAt": "2026-06-12T05:58:42.531Z"
+    },
+    {
+      "id": "cmqain2w3003bpzpbi4ui5s6n",
+      "bookId": "cmqain2vf000zpzpbxhh3mc1p",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "stockDisponible": 12,
+      "stockConsignado": 4,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.531Z",
+      "createdAt": "2026-06-12T05:58:42.531Z"
+    },
+    {
+      "id": "cmqain2w3003dpzpbqdvlba53",
+      "bookId": "cmqain2vg0011pzpb8bl3kmto",
+      "warehouseId": "cmqain2uu000epzpbvd0ooyfk",
+      "stockDisponible": 16,
+      "stockConsignado": 6,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.531Z",
+      "createdAt": "2026-06-12T05:58:42.531Z"
+    },
+    {
+      "id": "cmqain2w3003fpzpbc2cpp7vd",
+      "bookId": "cmqain2vg0011pzpb8bl3kmto",
+      "warehouseId": "cmqain2uu000fpzpbzrawmymr",
+      "stockDisponible": 7,
+      "stockConsignado": 3,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.532Z",
+      "createdAt": "2026-06-12T05:58:42.532Z"
+    },
+    {
+      "id": "cmqain2w4003hpzpbfreci0ej",
+      "bookId": "cmqain2vg0011pzpb8bl3kmto",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "stockDisponible": 5,
+      "stockConsignado": 1,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.532Z",
+      "createdAt": "2026-06-12T05:58:42.532Z"
+    },
+    {
+      "id": "cmqain2w4003jpzpb3j2iq4q9",
+      "bookId": "cmqain2vg0011pzpb8bl3kmto",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "stockDisponible": 10,
+      "stockConsignado": 4,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.532Z",
+      "createdAt": "2026-06-12T05:58:42.532Z"
+    },
+    {
+      "id": "cmqain2w4003lpzpbuqfwgaoy",
+      "bookId": "cmqain2vh0013pzpb0ftp9xsc",
+      "warehouseId": "cmqain2uu000epzpbvd0ooyfk",
+      "stockDisponible": 27,
+      "stockConsignado": 11,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.533Z",
+      "createdAt": "2026-06-12T05:58:42.533Z"
+    },
+    {
+      "id": "cmqain2w5003npzpblefc183l",
+      "bookId": "cmqain2vh0013pzpb0ftp9xsc",
+      "warehouseId": "cmqain2uu000fpzpbzrawmymr",
+      "stockDisponible": 12,
+      "stockConsignado": 4,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.533Z",
+      "createdAt": "2026-06-12T05:58:42.533Z"
+    },
+    {
+      "id": "cmqain2w5003ppzpblfodnkp3",
+      "bookId": "cmqain2vh0013pzpb0ftp9xsc",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "stockDisponible": 9,
+      "stockConsignado": 3,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.534Z",
+      "createdAt": "2026-06-12T05:58:42.534Z"
+    },
+    {
+      "id": "cmqain2w6003rpzpb4dqbi6pn",
+      "bookId": "cmqain2vh0013pzpb0ftp9xsc",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "stockDisponible": 16,
+      "stockConsignado": 6,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.534Z",
+      "createdAt": "2026-06-12T05:58:42.534Z"
+    },
+    {
+      "id": "cmqain2w6003tpzpbem0l13a8",
+      "bookId": "cmqain2vj0015pzpb0z5tsnaw",
+      "warehouseId": "cmqain2uu000epzpbvd0ooyfk",
+      "stockDisponible": 30,
+      "stockConsignado": 12,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.534Z",
+      "createdAt": "2026-06-12T05:58:42.534Z"
+    },
+    {
+      "id": "cmqain2w6003vpzpbpeh28mdr",
+      "bookId": "cmqain2vj0015pzpb0z5tsnaw",
+      "warehouseId": "cmqain2uu000fpzpbzrawmymr",
+      "stockDisponible": 13,
+      "stockConsignado": 5,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.535Z",
+      "createdAt": "2026-06-12T05:58:42.535Z"
+    },
+    {
+      "id": "cmqain2w7003xpzpbwfncm6zd",
+      "bookId": "cmqain2vj0015pzpb0z5tsnaw",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "stockDisponible": 10,
+      "stockConsignado": 4,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.535Z",
+      "createdAt": "2026-06-12T05:58:42.535Z"
+    },
+    {
+      "id": "cmqain2w7003zpzpb7m15yjzc",
+      "bookId": "cmqain2vj0015pzpb0z5tsnaw",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "stockDisponible": 20,
+      "stockConsignado": 8,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.535Z",
+      "createdAt": "2026-06-12T05:58:42.535Z"
+    },
+    {
+      "id": "cmqain2w70041pzpb0jrjeyci",
+      "bookId": "cmqain2vk0017pzpb67gwo15w",
+      "warehouseId": "cmqain2uu000epzpbvd0ooyfk",
+      "stockDisponible": 11,
+      "stockConsignado": 4,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.536Z",
+      "createdAt": "2026-06-12T05:58:42.536Z"
+    },
+    {
+      "id": "cmqain2w80043pzpb9upzzgmf",
+      "bookId": "cmqain2vk0017pzpb67gwo15w",
+      "warehouseId": "cmqain2uu000fpzpbzrawmymr",
+      "stockDisponible": 4,
+      "stockConsignado": 1,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.536Z",
+      "createdAt": "2026-06-12T05:58:42.536Z"
+    },
+    {
+      "id": "cmqain2w80045pzpb418ad8rv",
+      "bookId": "cmqain2vk0017pzpb67gwo15w",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "stockDisponible": 3,
+      "stockConsignado": 0,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.537Z",
+      "createdAt": "2026-06-12T05:58:42.537Z"
+    },
+    {
+      "id": "cmqain2w90047pzpbv1sx13iz",
+      "bookId": "cmqain2vk0017pzpb67gwo15w",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "stockDisponible": 6,
+      "stockConsignado": 2,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.537Z",
+      "createdAt": "2026-06-12T05:58:42.537Z"
+    },
+    {
+      "id": "cmqain2w90049pzpb0r161vnv",
+      "bookId": "cmqain2vl0019pzpbsyku8rdf",
+      "warehouseId": "cmqain2uu000epzpbvd0ooyfk",
+      "stockDisponible": 23,
+      "stockConsignado": 9,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.538Z",
+      "createdAt": "2026-06-12T05:58:42.538Z"
+    },
+    {
+      "id": "cmqain2w9004bpzpb7nw1afsf",
+      "bookId": "cmqain2vl0019pzpbsyku8rdf",
+      "warehouseId": "cmqain2uu000fpzpbzrawmymr",
+      "stockDisponible": 10,
+      "stockConsignado": 4,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.538Z",
+      "createdAt": "2026-06-12T05:58:42.538Z"
+    },
+    {
+      "id": "cmqain2wa004dpzpbpqwzempa",
+      "bookId": "cmqain2vl0019pzpbsyku8rdf",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "stockDisponible": 7,
+      "stockConsignado": 3,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.538Z",
+      "createdAt": "2026-06-12T05:58:42.538Z"
+    },
+    {
+      "id": "cmqain2wa004fpzpb9t7uiayw",
+      "bookId": "cmqain2vl0019pzpbsyku8rdf",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "stockDisponible": 14,
+      "stockConsignado": 6,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.539Z",
+      "createdAt": "2026-06-12T05:58:42.539Z"
+    },
+    {
+      "id": "cmqain2wa004hpzpb9s0lns58",
+      "bookId": "cmqain2vm001bpzpbgmd70vf8",
+      "warehouseId": "cmqain2uu000epzpbvd0ooyfk",
+      "stockDisponible": 34,
+      "stockConsignado": 14,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.539Z",
+      "createdAt": "2026-06-12T05:58:42.539Z"
+    },
+    {
+      "id": "cmqain2wb004jpzpb085ikjca",
+      "bookId": "cmqain2vm001bpzpbgmd70vf8",
+      "warehouseId": "cmqain2uu000fpzpbzrawmymr",
+      "stockDisponible": 16,
+      "stockConsignado": 6,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.539Z",
+      "createdAt": "2026-06-12T05:58:42.539Z"
+    },
+    {
+      "id": "cmqain2wb004lpzpby89auycl",
+      "bookId": "cmqain2vm001bpzpbgmd70vf8",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "stockDisponible": 13,
+      "stockConsignado": 5,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.540Z",
+      "createdAt": "2026-06-12T05:58:42.540Z"
+    },
+    {
+      "id": "cmqain2wc004npzpb14aq6p6f",
+      "bookId": "cmqain2vm001bpzpbgmd70vf8",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "stockDisponible": 23,
+      "stockConsignado": 9,
+      "stockMinimo": 5,
+      "stockReposicion": 20,
+      "updatedAt": "2026-06-12T05:58:42.540Z",
+      "createdAt": "2026-06-12T05:58:42.540Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": "cmqain2wd004ppzpbj38eeimm",
+      "orderNumber": "EH-2026-001",
+      "customerName": "Lucía Fernández",
+      "customerEmail": "lucia@email.com",
+      "customerPhone": "+54 11 5555-1111",
+      "customerAddress": "Av. Santa Fe 1500, Piso 3",
+      "customerCity": "Buenos Aires",
+      "status": "DELIVERED",
+      "source": "ONLINE",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "subtotal": 21900,
+      "discountAmount": 0,
+      "shippingCost": 1200,
+      "totalAmount": 23100,
+      "paymentMethod": "MERCADO_PAGO",
+      "paymentRef": null,
+      "notes": null,
+      "confirmedAt": "2026-01-10T00:00:00.000Z",
+      "shippedAt": "2026-01-12T00:00:00.000Z",
+      "deliveredAt": "2026-01-15T00:00:00.000Z",
+      "cancelledAt": null,
+      "createdAt": "2026-06-12T05:58:42.541Z",
+      "updatedAt": "2026-06-12T05:58:42.541Z",
+      "items": [
+        {
+          "id": "cmqain2we004rpzpb2xuly743",
+          "orderId": "cmqain2wd004ppzpbj38eeimm",
+          "bookId": "cmqain2v4000jpzpb40x8blle",
+          "title": "El Aleph",
+          "unitPrice": 8900,
+          "quantity": 1,
+          "subtotal": 8900,
+          "commissionRate": null,
+          "commissionAmount": null
+        },
+        {
+          "id": "cmqain2we004tpzpbz58m4skr",
+          "orderId": "cmqain2wd004ppzpbj38eeimm",
+          "bookId": "cmqain2v8000ppzpbxv8ksxao",
+          "title": "Veinte poemas de amor y una canción desesperada",
+          "unitPrice": 6500,
+          "quantity": 2,
+          "subtotal": 13000,
+          "commissionRate": null,
+          "commissionAmount": null
+        }
+      ],
+      "warehouse": {
+        "id": "cmqain2uu000hpzpbrzjw39rg",
+        "name": "Tienda Online"
+      }
+    },
+    {
+      "id": "cmqain2wf004vpzpbfw88irhv",
+      "orderNumber": "EH-2026-002",
+      "customerName": "Diego Morales",
+      "customerEmail": "diego@email.com",
+      "customerPhone": "+57 1 555-2222",
+      "customerAddress": "Calle 72 #10-45, Apartamento 402",
+      "customerCity": "Bogotá",
+      "status": "CONFIRMED",
+      "source": "ONLINE",
+      "warehouseId": "cmqain2uu000fpzpbzrawmymr",
+      "subtotal": 25700,
+      "discountAmount": 0,
+      "shippingCost": 2800,
+      "totalAmount": 28500,
+      "paymentMethod": "TRANSFERENCIA",
+      "paymentRef": null,
+      "notes": null,
+      "confirmedAt": "2026-01-11T00:00:00.000Z",
+      "shippedAt": null,
+      "deliveredAt": null,
+      "cancelledAt": null,
+      "createdAt": "2026-06-12T05:58:42.543Z",
+      "updatedAt": "2026-06-12T05:58:42.543Z",
+      "items": [
+        {
+          "id": "cmqain2wg004xpzpbqtyvsrpv",
+          "orderId": "cmqain2wf004vpzpbfw88irhv",
+          "bookId": "cmqain2v6000lpzpbqcdcf2m8",
+          "title": "Cien años de soledad",
+          "unitPrice": 12500,
+          "quantity": 1,
+          "subtotal": 12500,
+          "commissionRate": null,
+          "commissionAmount": null
+        },
+        {
+          "id": "cmqain2wg004zpzpb8ds3lv8d",
+          "orderId": "cmqain2wf004vpzpbfw88irhv",
+          "bookId": "cmqain2v9000rpzpbqpjwdgdp",
+          "title": "Rayuela",
+          "unitPrice": 13200,
+          "quantity": 1,
+          "subtotal": 13200,
+          "commissionRate": null,
+          "commissionAmount": null
+        }
+      ],
+      "warehouse": {
+        "id": "cmqain2uu000fpzpbzrawmymr",
+        "name": "Librería SUR"
+      }
+    },
+    {
+      "id": "cmqain2wh0051pzpbqod6p7ma",
+      "orderNumber": "EH-2026-003",
+      "customerName": "Valentina Rojas",
+      "customerEmail": "valentina@email.com",
+      "customerPhone": "+52 55 5555-3333",
+      "customerAddress": "Col. Roma Norte, Av. Álvaro Obregón 188",
+      "customerCity": "Ciudad de México",
+      "status": "PENDING",
+      "source": "ONLINE",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "subtotal": 33900,
+      "discountAmount": 1500,
+      "shippingCost": 0,
+      "totalAmount": 32400,
+      "paymentMethod": "EFECTIVO",
+      "paymentRef": null,
+      "notes": null,
+      "confirmedAt": null,
+      "shippedAt": null,
+      "deliveredAt": null,
+      "cancelledAt": null,
+      "createdAt": "2026-06-12T05:58:42.545Z",
+      "updatedAt": "2026-06-12T05:58:42.545Z",
+      "items": [
+        {
+          "id": "cmqain2wh0053pzpbzadpbxyf",
+          "orderId": "cmqain2wh0051pzpbqod6p7ma",
+          "bookId": "cmqain2v7000npzpbnxmf2okt",
+          "title": "La casa de los espíritus",
+          "unitPrice": 11800,
+          "quantity": 1,
+          "subtotal": 11800,
+          "commissionRate": null,
+          "commissionAmount": null
+        },
+        {
+          "id": "cmqain2wi0055pzpb4zlkqrnd",
+          "orderId": "cmqain2wh0051pzpbqod6p7ma",
+          "bookId": "cmqain2vg0011pzpb8bl3kmto",
+          "title": "Eva Luna",
+          "unitPrice": 10200,
+          "quantity": 1,
+          "subtotal": 10200,
+          "commissionRate": null,
+          "commissionAmount": null
+        },
+        {
+          "id": "cmqain2wj0057pzpb54vx90l4",
+          "orderId": "cmqain2wh0051pzpbqod6p7ma",
+          "bookId": "cmqain2vj0015pzpb0z5tsnaw",
+          "title": "El amor en los tiempos del cólera",
+          "unitPrice": 11900,
+          "quantity": 1,
+          "subtotal": 11900,
+          "commissionRate": 0.12,
+          "commissionAmount": 1428
+        }
+      ],
+      "warehouse": {
+        "id": "cmqain2uu000gpzpbpjdjicy6",
+        "name": "El Virrey"
+      }
+    },
+    {
+      "id": "cmqain2wj0059pzpbedohpqyu",
+      "orderNumber": "EH-2026-004",
+      "customerName": "Martín Gutiérrez",
+      "customerEmail": "martin@email.com",
+      "customerPhone": "+54 11 5555-4444",
+      "customerAddress": "Av. Córdoba 2800",
+      "customerCity": "Buenos Aires",
+      "status": "SHIPPED",
+      "source": "MANUAL",
+      "warehouseId": "cmqain2uu000epzpbvd0ooyfk",
+      "subtotal": 26200,
+      "discountAmount": 0,
+      "shippingCost": 800,
+      "totalAmount": 27000,
+      "paymentMethod": "TRANSFERENCIA",
+      "paymentRef": null,
+      "notes": null,
+      "confirmedAt": "2026-01-13T00:00:00.000Z",
+      "shippedAt": "2026-01-15T00:00:00.000Z",
+      "deliveredAt": null,
+      "cancelledAt": null,
+      "createdAt": "2026-06-12T05:58:42.548Z",
+      "updatedAt": "2026-06-12T05:58:42.548Z",
+      "items": [
+        {
+          "id": "cmqain2wk005bpzpbiv8k8x9o",
+          "orderId": "cmqain2wj0059pzpbedohpqyu",
+          "bookId": "cmqain2vb000tpzpbow0fva0x",
+          "title": "Ficciones",
+          "unitPrice": 9200,
+          "quantity": 2,
+          "subtotal": 18400,
+          "commissionRate": null,
+          "commissionAmount": null
+        },
+        {
+          "id": "cmqain2wk005dpzpbinorh4a1",
+          "orderId": "cmqain2wj0059pzpbedohpqyu",
+          "bookId": "cmqain2ve000xpzpbep96naye",
+          "title": "Bestiario",
+          "unitPrice": 7800,
+          "quantity": 1,
+          "subtotal": 7800,
+          "commissionRate": null,
+          "commissionAmount": null
+        }
+      ],
+      "warehouse": {
+        "id": "cmqain2uu000epzpbvd0ooyfk",
+        "name": "Almacén Central"
+      }
+    },
+    {
+      "id": "cmqain2wl005fpzpb4x7mnfz8",
+      "orderNumber": "EH-2026-005",
+      "customerName": "Camila Herrera",
+      "customerEmail": "camila@email.com",
+      "customerPhone": "+54 11 5555-5555",
+      "customerAddress": "Caballito, Av. Rivadavia 5200",
+      "customerCity": "Buenos Aires",
+      "status": "CANCELLED",
+      "source": "ONLINE",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "subtotal": 13500,
+      "discountAmount": 0,
+      "shippingCost": 1200,
+      "totalAmount": 14700,
+      "paymentMethod": null,
+      "paymentRef": null,
+      "notes": null,
+      "confirmedAt": null,
+      "shippedAt": null,
+      "deliveredAt": null,
+      "cancelledAt": "2026-01-11T00:00:00.000Z",
+      "createdAt": "2026-06-12T05:58:42.549Z",
+      "updatedAt": "2026-06-12T05:58:42.549Z",
+      "items": [
+        {
+          "id": "cmqain2wm005hpzpbxps3g9a2",
+          "orderId": "cmqain2wl005fpzpb4x7mnfz8",
+          "bookId": "cmqain2vl0019pzpbsyku8rdf",
+          "title": "La sombra del viento",
+          "unitPrice": 13500,
+          "quantity": 1,
+          "subtotal": 13500,
+          "commissionRate": 0.15,
+          "commissionAmount": 2025
+        }
+      ],
+      "warehouse": {
+        "id": "cmqain2uu000hpzpbrzjw39rg",
+        "name": "Tienda Online"
+      }
+    }
+  ],
+  "orderItems": [
+    {
+      "id": "cmqain2we004rpzpb2xuly743",
+      "orderId": "cmqain2wd004ppzpbj38eeimm",
+      "bookId": "cmqain2v4000jpzpb40x8blle",
+      "title": "El Aleph",
+      "unitPrice": 8900,
+      "quantity": 1,
+      "subtotal": 8900,
+      "commissionRate": null,
+      "commissionAmount": null
+    },
+    {
+      "id": "cmqain2we004tpzpbz58m4skr",
+      "orderId": "cmqain2wd004ppzpbj38eeimm",
+      "bookId": "cmqain2v8000ppzpbxv8ksxao",
+      "title": "Veinte poemas de amor y una canción desesperada",
+      "unitPrice": 6500,
+      "quantity": 2,
+      "subtotal": 13000,
+      "commissionRate": null,
+      "commissionAmount": null
+    },
+    {
+      "id": "cmqain2wg004xpzpbqtyvsrpv",
+      "orderId": "cmqain2wf004vpzpbfw88irhv",
+      "bookId": "cmqain2v6000lpzpbqcdcf2m8",
+      "title": "Cien años de soledad",
+      "unitPrice": 12500,
+      "quantity": 1,
+      "subtotal": 12500,
+      "commissionRate": null,
+      "commissionAmount": null
+    },
+    {
+      "id": "cmqain2wg004zpzpb8ds3lv8d",
+      "orderId": "cmqain2wf004vpzpbfw88irhv",
+      "bookId": "cmqain2v9000rpzpbqpjwdgdp",
+      "title": "Rayuela",
+      "unitPrice": 13200,
+      "quantity": 1,
+      "subtotal": 13200,
+      "commissionRate": null,
+      "commissionAmount": null
+    },
+    {
+      "id": "cmqain2wh0053pzpbzadpbxyf",
+      "orderId": "cmqain2wh0051pzpbqod6p7ma",
+      "bookId": "cmqain2v7000npzpbnxmf2okt",
+      "title": "La casa de los espíritus",
+      "unitPrice": 11800,
+      "quantity": 1,
+      "subtotal": 11800,
+      "commissionRate": null,
+      "commissionAmount": null
+    },
+    {
+      "id": "cmqain2wi0055pzpb4zlkqrnd",
+      "orderId": "cmqain2wh0051pzpbqod6p7ma",
+      "bookId": "cmqain2vg0011pzpb8bl3kmto",
+      "title": "Eva Luna",
+      "unitPrice": 10200,
+      "quantity": 1,
+      "subtotal": 10200,
+      "commissionRate": null,
+      "commissionAmount": null
+    },
+    {
+      "id": "cmqain2wj0057pzpb54vx90l4",
+      "orderId": "cmqain2wh0051pzpbqod6p7ma",
+      "bookId": "cmqain2vj0015pzpb0z5tsnaw",
+      "title": "El amor en los tiempos del cólera",
+      "unitPrice": 11900,
+      "quantity": 1,
+      "subtotal": 11900,
+      "commissionRate": 0.12,
+      "commissionAmount": 1428
+    },
+    {
+      "id": "cmqain2wk005bpzpbiv8k8x9o",
+      "orderId": "cmqain2wj0059pzpbedohpqyu",
+      "bookId": "cmqain2vb000tpzpbow0fva0x",
+      "title": "Ficciones",
+      "unitPrice": 9200,
+      "quantity": 2,
+      "subtotal": 18400,
+      "commissionRate": null,
+      "commissionAmount": null
+    },
+    {
+      "id": "cmqain2wk005dpzpbinorh4a1",
+      "orderId": "cmqain2wj0059pzpbedohpqyu",
+      "bookId": "cmqain2ve000xpzpbep96naye",
+      "title": "Bestiario",
+      "unitPrice": 7800,
+      "quantity": 1,
+      "subtotal": 7800,
+      "commissionRate": null,
+      "commissionAmount": null
+    },
+    {
+      "id": "cmqain2wm005hpzpbxps3g9a2",
+      "orderId": "cmqain2wl005fpzpb4x7mnfz8",
+      "bookId": "cmqain2vl0019pzpbsyku8rdf",
+      "title": "La sombra del viento",
+      "unitPrice": 13500,
+      "quantity": 1,
+      "subtotal": 13500,
+      "commissionRate": 0.15,
+      "commissionAmount": 2025
+    }
+  ],
+  "auditLog": [
+    {
+      "id": "cmqain2wn005jpzpbnovs27m8",
+      "bookId": "cmqain2v4000jpzpb40x8blle",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "orderId": "cmqain2wd004ppzpbj38eeimm",
+      "movementType": "SALE",
+      "quantityBefore": 21,
+      "quantityAfter": 20,
+      "quantityDelta": -1,
+      "performedById": "cmqain2uh0001pzpbhigxbaka",
+      "notes": "Venta automática por orden EH-2026-001",
+      "createdAt": "2026-06-12T05:58:42.552Z"
+    },
+    {
+      "id": "cmqain2wo005lpzpbht8fetzp",
+      "bookId": "cmqain2v8000ppzpbxv8ksxao",
+      "warehouseId": "cmqain2uu000hpzpbrzjw39rg",
+      "orderId": "cmqain2wd004ppzpbj38eeimm",
+      "movementType": "SALE",
+      "quantityBefore": 25,
+      "quantityAfter": 23,
+      "quantityDelta": -2,
+      "performedById": "cmqain2uh0001pzpbhigxbaka",
+      "notes": "Venta automática por orden EH-2026-001",
+      "createdAt": "2026-06-12T05:58:42.553Z"
+    },
+    {
+      "id": "cmqain2wq005npzpbefkpskfh",
+      "bookId": "cmqain2v6000lpzpbqcdcf2m8",
+      "warehouseId": "cmqain2uu000fpzpbzrawmymr",
+      "orderId": "cmqain2wf004vpzpbfw88irhv",
+      "movementType": "SALE",
+      "quantityBefore": 18,
+      "quantityAfter": 17,
+      "quantityDelta": -1,
+      "performedById": "cmqain2uh0001pzpbhigxbaka",
+      "notes": "Venta automática por orden EH-2026-002",
+      "createdAt": "2026-06-12T05:58:42.554Z"
+    },
+    {
+      "id": "cmqain2wr005ppzpb06xnuc56",
+      "bookId": "cmqain2v9000rpzpbqpjwdgdp",
+      "warehouseId": "cmqain2uu000fpzpbzrawmymr",
+      "orderId": "cmqain2wf004vpzpbfw88irhv",
+      "movementType": "SALE",
+      "quantityBefore": 7,
+      "quantityAfter": 6,
+      "quantityDelta": -1,
+      "performedById": "cmqain2uh0001pzpbhigxbaka",
+      "notes": "Venta automática por orden EH-2026-002",
+      "createdAt": "2026-06-12T05:58:42.555Z"
+    },
+    {
+      "id": "cmqain2ws005rpzpb73f2t6p0",
+      "bookId": "cmqain2v7000npzpbnxmf2okt",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "orderId": "cmqain2wh0051pzpbqod6p7ma",
+      "movementType": "SALE",
+      "quantityBefore": 9,
+      "quantityAfter": 8,
+      "quantityDelta": -1,
+      "performedById": "cmqain2uh0001pzpbhigxbaka",
+      "notes": "Venta automática por orden EH-2026-003",
+      "createdAt": "2026-06-12T05:58:42.556Z"
+    },
+    {
+      "id": "cmqain2wt005tpzpbi8v3xqti",
+      "bookId": "cmqain2vg0011pzpb8bl3kmto",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "orderId": "cmqain2wh0051pzpbqod6p7ma",
+      "movementType": "SALE",
+      "quantityBefore": 5,
+      "quantityAfter": 4,
+      "quantityDelta": -1,
+      "performedById": "cmqain2uh0001pzpbhigxbaka",
+      "notes": "Venta automática por orden EH-2026-003",
+      "createdAt": "2026-06-12T05:58:42.557Z"
+    },
+    {
+      "id": "cmqain2wt005vpzpbafz1pgau",
+      "bookId": "cmqain2vj0015pzpb0z5tsnaw",
+      "warehouseId": "cmqain2uu000gpzpbpjdjicy6",
+      "orderId": "cmqain2wh0051pzpbqod6p7ma",
+      "movementType": "SALE",
+      "quantityBefore": 10,
+      "quantityAfter": 9,
+      "quantityDelta": -1,
+      "performedById": "cmqain2uh0001pzpbhigxbaka",
+      "notes": "Venta automática por orden EH-2026-003",
+      "createdAt": "2026-06-12T05:58:42.558Z"
+    },
+    {
+      "id": "cmqain2wu005xpzpb1049hzfj",
+      "bookId": "cmqain2vb000tpzpbow0fva0x",
+      "warehouseId": "cmqain2uu000epzpbvd0ooyfk",
+      "orderId": "cmqain2wj0059pzpbedohpqyu",
+      "movementType": "SALE",
+      "quantityBefore": 28,
+      "quantityAfter": 26,
+      "quantityDelta": -2,
+      "performedById": "cmqain2uh0001pzpbhigxbaka",
+      "notes": "Venta automática por orden EH-2026-004",
+      "createdAt": "2026-06-12T05:58:42.559Z"
+    },
+    {
+      "id": "cmqain2wv005zpzpbm5eki131",
+      "bookId": "cmqain2ve000xpzpbep96naye",
+      "warehouseId": "cmqain2uu000epzpbvd0ooyfk",
+      "orderId": "cmqain2wj0059pzpbedohpqyu",
+      "movementType": "SALE",
+      "quantityBefore": 21,
+      "quantityAfter": 20,
+      "quantityDelta": -1,
+      "performedById": "cmqain2uh0001pzpbhigxbaka",
+      "notes": "Venta automática por orden EH-2026-004",
+      "createdAt": "2026-06-12T05:58:42.559Z"
+    }
+  ]
+}
