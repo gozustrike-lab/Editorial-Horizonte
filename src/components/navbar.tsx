@@ -13,7 +13,7 @@ import {
   Sun,
   Moon,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const navItems: { key: SectionType; label: string; icon?: React.ReactNode }[] = [
   { key: 'inicio', label: 'Inicio' },
@@ -27,7 +27,14 @@ export function Navbar() {
     useAppStore();
   const { theme, setTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const count = cartCount();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const navigate = (section: SectionType) => {
     setActiveSection(section);
@@ -38,13 +45,23 @@ export function Navbar() {
     }
   };
 
+  const isOverHero = !scrolled;
+
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-md">
+    <header
+      className={`fixed top-0 z-40 w-full transition-all duration-500 ${
+        isOverHero
+          ? 'border-b border-white/0 bg-transparent'
+          : 'border-b border-border bg-background/85 backdrop-blur-md shadow-sm'
+      }`}
+    >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <button
           onClick={() => navigate('inicio')}
-          className="flex items-center gap-2 font-serif text-lg font-bold tracking-wide text-primary sm:text-xl"
+          className={`flex items-center gap-2 font-serif text-lg font-bold tracking-wide transition-colors duration-500 sm:text-xl ${
+            isOverHero ? 'text-white' : 'text-primary'
+          }`}
         >
           <BookOpen className="size-5 sm:size-6" />
           <span className="hidden sm:inline">EDITORIAL HORIZONTE</span>
@@ -59,7 +76,11 @@ export function Navbar() {
               variant={activeSection === item.key ? 'default' : 'ghost'}
               size="sm"
               onClick={() => navigate(item.key)}
-              className="gap-1.5"
+              className={`gap-1.5 transition-colors duration-500 ${
+                isOverHero && activeSection !== item.key
+                  ? 'text-white/80 hover:text-white hover:bg-white/10'
+                  : ''
+              }`}
             >
               {item.icon}
               {item.label}
@@ -74,6 +95,7 @@ export function Navbar() {
             size="icon"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             aria-label="Toggle theme"
+            className={`transition-colors duration-500 ${isOverHero ? 'text-white/80 hover:text-white hover:bg-white/10' : ''}`}
           >
             <Sun className="size-4 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
             <Moon className="absolute size-4 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
@@ -83,7 +105,7 @@ export function Navbar() {
             variant="ghost"
             size="icon"
             onClick={() => setCartOpen(true)}
-            className="relative"
+            className={`relative transition-colors duration-500 ${isOverHero ? 'text-white/80 hover:text-white hover:bg-white/10' : ''}`}
             aria-label="Open cart"
           >
             <ShoppingCart className="size-4" />
@@ -97,7 +119,12 @@ export function Navbar() {
           {/* Mobile menu */}
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden" aria-label="Open menu">
+              <Button
+                variant="ghost"
+                size="icon"
+                className={`md:hidden transition-colors duration-500 ${isOverHero ? 'text-white/80 hover:text-white hover:bg-white/10' : ''}`}
+                aria-label="Open menu"
+              >
                 <Menu className="size-5" />
               </Button>
             </SheetTrigger>

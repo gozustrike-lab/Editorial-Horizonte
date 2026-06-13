@@ -24,7 +24,7 @@ export function HeroSection() {
   return (
     <section
       id="inicio"
-      className="relative flex min-h-[calc(100vh-4rem)] items-center justify-center overflow-hidden"
+      className="relative flex min-h-screen items-center justify-center overflow-hidden -mt-16 pt-16"
     >
       {/* Shader animation background — loaded dynamically, no SSR */}
       <div className="absolute inset-0">
@@ -102,8 +102,8 @@ export function HeroSection() {
         </motion.div>
       </div>
 
-      {/* Bottom fade to cream background */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background via-background/60 to-transparent" />
+      {/* Subtle bottom edge — barely perceptible transition */}
+      <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-t from-background/40 to-transparent" />
     </section>
   );
 }
