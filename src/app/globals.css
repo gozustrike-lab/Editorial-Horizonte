@@ -143,3 +143,23 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: oklch(0.7 0 0 / 50%);
 }
+
+/* Marquee animation */
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Shimmer border rotation */
+@keyframes shimmer-border-rotate {
+  from {
+    --shimmer-angle: 0deg;
+  }
+  to {
+    --shimmer-angle: 360deg;
+  }
+}
